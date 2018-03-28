@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--head部分-->
+
+<head th:include="fragments/layout :: htmlhead" th:with="title='test'">
+</head>
+
+<body>
+
+<div th:replace="fragments/layout :: header"></div>
+<h1>Error</h1>
+<div th:replace="fragments/layout :: footer"></div>
+
+</body>

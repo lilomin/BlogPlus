@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--head部分-->
+
+<head th:fragment="htmlhead">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="renderer" content="webkit" />
+    <meta name="description" content="" />
+    <meta name="author" content="wyait" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <link rel="icon" type="image/x-icon" href="pika.ico">
+
+    <link rel="stylesheet" href="/css/blogp.css" />
+    <link rel="stylesheet" href="/plugin/editormd/css/editormd.min.css" />
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script src="/js/blogp.js"></script>
+</head>
+
+<body>
+
+    <div th:replace="fragments/layout :: header"></div>
+
+    <input id="userId" style="display:none;" th:value="${session.user.userId}"/>
+
+    <div class="edit-blog-title">
+        <div class="input-group input-group-lg" style="padding: 7px 10px 0 10px;">
+            <input type="text" class="form-control blog-title" placeholder="Title" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+        </div>
+        
+        <div class="input-group input-group-lg" style="padding: 7px 10px 0 10px;">
+            <textarea class="form-control blog-desc" placeholder="A paragraph description"></textarea>
+        </div>
+    </div>
+
+    <div style="padding: 0 10px;">
+        <div class="editormd" id="editormd-container">
+            <textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc" id="editormd"></textarea>
+    
+            <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+            <!-- html textarea 需要开启配置项 saveHTMLToTextarea == true -->
+            <textarea class="editormd-html-textarea" name="editorhtml" id="editorHtml"></textarea>
+        </div>
+    </div>
+
+    <div style="text-align: right; padding-bottom: 1%;">
+        <div id="bError">
+        </div>
+        <button id="blogPreview" type="button" class="btn btn-primary">Preview</button>
+        <button id="blogSubmit" type="button" class="btn btn-success">Submit</button>
+    </div>
+
+    <div th:replace="fragments/layout :: footer"></div>
+
+</body>
+
+</html>
+<script type="text/javascript" src="/plugin/editormd/editormd.min.js"></script>
+<script>
+   
+</script>

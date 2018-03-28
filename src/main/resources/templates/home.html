@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--head部分-->
+
+<head th:include="fragments/layout :: htmlhead" th:with="title='test'">
+</head>
+
+<body>
+
+    <div th:replace="fragments/layout :: header"></div>
+    <div th:replace="fragments/layout :: header-cover"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div th:replace="fragments/card :: card"></div>
+        </div>
+        <br></br>
+        <div class="row justify-content-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <div th:replace="fragments/layout :: footer"></div>
+
+</body>
+
+<script th:inline="javascript">
+    var app = {};
+    app.totalPage = [[${totalPage}]] || 1;
+
+    app.getPaginationItems = function() {
+        var items = [];
+
+        var perviousItem =  [
+            '<li class="page-item disabled pervious">',
+                '<a class="page-link" href="#" tabindex="-1">Previous</a>',
+            '</li>'
+        ].join('');
+
+        var nextItem = [
+            '<li class="page-item">',
+                '<a class="page-link" href="#">Next</a>',
+            '</li>'
+        ].join('');
+
+       items.push(perviousItem);
+        for(var index=1; index<=app.totalPage; index++) {
+            var pageItem = [
+                '<li class="page-item">',
+                    '<a class="page-link" href="#">'+ index +'</a>',
+                '</li>'
+            ].join('');
+            items.push(pageItem);
+        }
+        items.push(nextItem);
+        return items.join('');
+       
+   };
+
+    function init() {
+        var items = app.getPaginationItems();
+        $(".row .pagination").append(items);
+    }
+
+    init();
+   
+</script>
+
+</html>
