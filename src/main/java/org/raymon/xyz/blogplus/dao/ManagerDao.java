@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Update;
 import org.raymon.xyz.blogplus.model.manager.Blog;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public interface ManagerDao {
 	int updateBlog(Blog blog);
 	
 	@Select(
-			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog where user_id = #{userId}" +
+			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog where user_id = #{userId} and hidden = 0" +
 					"order by create_time limit #{limit} offset #{offset}"
 	)
 	@Results({
@@ -83,5 +84,12 @@ public interface ManagerDao {
 			@Result(property = "updateTime", column = "update_time")
 	})
 	Blog selectByBlogTitle(@Param("userId") String userId, @Param("title")String title);
+	
+	@Update(
+			"update table blog set hidden = #{hidden}, update_time = #{updateTime}" +
+					"where blog_id = #{blogId} and user_id = #{userId}"
+	)
+	int updateBlogStatus(@Param("userId") String userId, @Param("blogId") String blogId,
+	                     @Param("hidden") boolean hidden, @Param("updateTime") Date updateTime);
 	
 }

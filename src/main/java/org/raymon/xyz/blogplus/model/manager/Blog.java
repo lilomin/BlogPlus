@@ -110,4 +110,12 @@ public class Blog {
 	public void setPath(String path) {
 		this.path = path;
 	}
+	
+	@Override
+	public String toString() {
+		return "Blog{" +
+				"blogId='" + blogId + '\'' +
+				", title='" + title + '\'' +
+				'}';
+	}
 }

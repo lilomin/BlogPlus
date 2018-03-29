@@ -53,7 +53,7 @@ $(document).ready(function () {
             data: JSON.stringify({
                 title: $('.blog-title').val(),
                 description: $('.blog-desc').val(),
-                content: $('.editormd-markdown-textarea').val(),
+                content: $('#editorHtml').val(),
                 userId: $('#userId').val()
             }),
             success: function (data, status) {

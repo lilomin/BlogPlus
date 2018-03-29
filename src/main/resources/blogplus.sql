@@ -29,7 +29,7 @@ CREATE TABLE blog (
   `create_time` DATETIME    NOT NULL,
   `update_time` DATETIME    NOT NULL,
   `description` VARCHAR(256) DEFAULT NULL,
-  `show`        BOOL         DEFAULT 1,
+  `hidden`        BOOL         DEFAULT 0,
   `image`       VARCHAR(128) DEFAULT NULL,
   PRIMARY KEY (`blog_id`, `user_id`)
 )

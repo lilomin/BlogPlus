@@ -3,9 +3,12 @@ package org.raymon.xyz.blogplus.service.impl;
 import org.raymon.xyz.blogplus.common.exception.BlogPlusException;
 import org.raymon.xyz.blogplus.common.exception.ExceptionEnum;
 import org.raymon.xyz.blogplus.common.utils.UUIDUtils;
+import org.raymon.xyz.blogplus.dao.BlogTagDao;
 import org.raymon.xyz.blogplus.dao.ManagerDao;
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.manager.Blog;
+import org.raymon.xyz.blogplus.model.manager.BlogTag;
+import org.raymon.xyz.blogplus.model.manager.TagChangeParam;
 import org.raymon.xyz.blogplus.service.ManagerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +16,9 @@ import org.springframework.util.Base64Utils;
 import org.thymeleaf.util.DateUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,8 +28,12 @@ import java.util.List;
 @Service
 public class ManagerServiceImpl implements ManagerService {
 	
+	private static final String PATH_CONNECTOR = "/";
+	
 	@Resource
 	private ManagerDao managerDao;
+	@Resource
+	private BlogTagDao blogTagDao;
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -47,10 +56,11 @@ public class ManagerServiceImpl implements ManagerService {
 			blog.setContent(Base64Utils.encodeToString(blog.getContent().getBytes()));
 			blog.setCreateTime(new Date());
 			blog.setUpdateTime(new Date());
-			blog.setBlogId(UUIDUtils.createUUID());
+			blogId = UUIDUtils.createUUID();
+			blog.setBlogId(blogId);
 			flag = managerDao.createBlog(blog);
-			if (flag > 0) {
-				// todo saveTags
+			if (flag > 0 && blog.getTags() != null && blog.getTags().size() > 0 ) {
+				blogTagChange(new TagChangeParam(userId, blogId, blog.getTags()));
 			}
 		}
 		return flag > 0;
@@ -105,5 +115,35 @@ public class ManagerServiceImpl implements ManagerService {
 			blog.setContent(new String(Base64Utils.decodeFromString(blog.getContent())));
 		}
 		return blog;
+	}
+	
+	@Override
+	public boolean blogSwitch(String userId, String blogId) {
+		Blog blog = managerDao.selectByBlogId(userId, blogId);
+		if (blog == null) {
+			throw new BlogPlusException(ExceptionEnum.DATA_NOT_FOUND);
+		}
+		boolean hidden = blog.isHidden();
+		int flag = managerDao.updateBlogStatus(userId, blogId, !hidden, new Date());
+		return flag > 0;
+	}
+	
+	@Override
+	public boolean blogTagChange(TagChangeParam param) {
+		if (param == null) {
+			return true;
+		}
+		List<String> tags = param.getTags();
+		if (tags == null || tags.isEmpty()) {
+			return true;
+		}
+		int count = 0;
+		for (String tag : new HashSet<>(tags)) {
+			BlogTag blogTag = new BlogTag(param.getBlogId(), param.getUserId(), tag);
+			blogTag.setCreateTime(new Date());
+			int flag = blogTagDao.saveBlogTag(blogTag);
+			count = count + flag;
+		}
+		return count > 0;
 	}
 }

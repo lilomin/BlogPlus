@@ -4,6 +4,7 @@ import org.raymon.xyz.blogplus.common.result.Result;
 import org.raymon.xyz.blogplus.common.result.ResultUtils;
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.manager.Blog;
+import org.raymon.xyz.blogplus.model.manager.TagChangeParam;
 import org.raymon.xyz.blogplus.service.ManagerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +43,20 @@ public class ManagerController {
 	                            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
 		Page page = managerService.getBlogList(userId, currentPage, pageSize);
 		return ResultUtils.success(page);
+	}
+	
+	@RequestMapping(value = "/switch", method = RequestMethod.GET)
+	@ResponseBody
+	public Result getBlogByPage(@RequestParam("userId") String userId, @RequestParam("blogId") String blogId) {
+		boolean flag = managerService.blogSwitch(userId, blogId);
+		return ResultUtils.success(flag);
+	}
+	
+	@RequestMapping(value = "/tag/change", method = RequestMethod.GET)
+	@ResponseBody
+	public Result changeBlogTag(@RequestBody TagChangeParam param) {
+		boolean flag = managerService.blogTagChange(param);
+		return ResultUtils.success(flag);
 	}
 	
 }

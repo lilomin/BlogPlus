@@ -18,7 +18,7 @@ import java.util.List;
  * Created by lilm on 18-3-11.
  */
 @Controller
-@RequestMapping("file")
+@RequestMapping("api/v1/file")
 public class FileController {
 	
 	@Resource
@@ -30,10 +30,4 @@ public class FileController {
 		return ResultUtils.success(fileService.fileList(path));
 	}
 	
-	@RequestMapping(value = "index", method = RequestMethod.GET)
-	public String index(Model model) {
-		List<FileVO> list = fileService.fileList("");
-		model.addAttribute("files", list);
-		return "index";
-	}
 }

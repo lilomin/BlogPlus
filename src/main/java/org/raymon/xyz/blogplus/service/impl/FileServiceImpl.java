@@ -22,13 +22,15 @@ public class FileServiceImpl implements FileService {
 	
 	@Override
 	public List<FileVO> fileList(String path) {
-		if (path != null) {
+		if (path != null && !path.trim().isEmpty()) {
 			path = fileRoot + "/" + path;
-			File file = new File(path);
-			if (file.exists()) {
-				if (file.isDirectory()) {
-					return listFile(file);
-				}
+		} else {
+			path = fileRoot;
+		}
+		File file = new File(path);
+		if (file.exists()) {
+			if (file.isDirectory()) {
+				return listFile(file);
 			}
 		}
 		return new ArrayList<>();

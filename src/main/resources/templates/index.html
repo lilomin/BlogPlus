@@ -21,6 +21,9 @@
         </div>
         <div class="panel-body">
             <ul class="list-group">
+                <li class="list-group-item">
+                    <a href=".."></a>
+                </li>
                 <li class="list-group-item" th:each="file : ${files}">
                     <div th:if="${!file.dir}">
                         <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
@@ -28,7 +31,7 @@
                     <div th:if="${file.dir}">
                         <span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
                     </div>
-                    <span th:text="${file.name}"></span>
+                    <a th:href="${file.name}" th:text="${file.name}"></a>
                     <span th:text="${file.size}"></span>
                 </li>
             </ul>
