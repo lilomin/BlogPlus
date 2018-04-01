@@ -22,7 +22,7 @@ $(document).ready(function () {
         $('#lError').empty();
         $.ajax({
             type: "POST",
-            url: "api/v1/user/login",
+            url: "/api/v1/user/login",
             datatype: "json",
             contentType: "application/json",
             data: JSON.stringify({
@@ -47,12 +47,12 @@ $(document).ready(function () {
     $('#blogSubmit').click(function () {
         $.ajax({
             type: "POST",
-            url: "api/v1/manager/save",
+            url: "/api/v1/manager/save",
             datatype: "json",
             contentType: "application/json",
             data: JSON.stringify({
-                title: $('.blog-title').val(),
-                description: $('.blog-desc').val(),
+                title: $('#blog-title').val(),
+                description: $('#blog-desc').val(),
                 content: $('#editorHtml').val(),
                 userId: $('#userId').val()
             }),

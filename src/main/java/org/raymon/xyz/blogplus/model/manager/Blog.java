@@ -20,6 +20,10 @@ public class Blog {
 	
 	// 访问路径
 	private String path;
+	// 作者名称
+	private String author;
+	// 创建时间字符串 YYYY-MM-DD
+	private String createDay;
 	
 	private List<String> tags;
 	
@@ -109,6 +113,22 @@ public class Blog {
 	
 	public void setPath(String path) {
 		this.path = path;
+	}
+	
+	public String getAuthor() {
+		return author;
+	}
+	
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	
+	public String getCreateDay() {
+		return createDay;
+	}
+	
+	public void setCreateDay(String createDay) {
+		this.createDay = createDay;
 	}
 	
 	@Override

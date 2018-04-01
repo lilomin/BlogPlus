@@ -14,6 +14,7 @@
     <link rel="icon" type="image/x-icon" href="pika.ico">
 
     <link rel="stylesheet" href="/css/blogp.css" />
+    <link rel="stylesheet" href="/css/tagsinput.min.css" />
     <link rel="stylesheet" href="/plugin/editormd/css/editormd.min.css" />
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -27,6 +28,7 @@
         crossorigin="anonymous"></script>
 
     <script src="/js/blogp.js"></script>
+    <script src="/js/tagsinput.min.js"></script>
 </head>
 
 <body>
@@ -35,32 +37,45 @@
 
     <input id="userId" style="display:none;" th:value="${session.user.userId}"/>
 
-    <div class="edit-blog-title">
-        <div class="input-group input-group-lg" style="padding: 7px 10px 0 10px;">
-            <input type="text" class="form-control blog-title" placeholder="Title" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+    <form style="padding:2%;">
+        <div class="form-group">
+            <label>Title</label>
+            <input id="blog-title" type="text" class="form-control" placeholder="Enter title"/>
         </div>
-        
-        <div class="input-group input-group-lg" style="padding: 7px 10px 0 10px;">
-            <textarea class="form-control blog-desc" placeholder="A paragraph description"></textarea>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label>Tags</label>
+                    <input class="form-control" name="tags" id="blog-tags"/>
+                </div>
+                <div class="col">
+                    <label>Cover Image</label>
+                    <div class="custom-file">
+                        <input id="blog-image" type="file" class="custom-file-input"/>
+                        <label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div style="padding: 0 10px;">
+        <div class="form-group">
+            <label>Description</label>
+            <textarea id="blog-desc" class="form-control" placeholder="Enter paragraph description"></textarea>
+        </div>
         <div class="editormd" id="editormd-container">
             <textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc" id="editormd"></textarea>
-    
+        
             <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
             <!-- html textarea 需要开启配置项 saveHTMLToTextarea == true -->
             <textarea class="editormd-html-textarea" name="editorhtml" id="editorHtml"></textarea>
         </div>
-    </div>
-
-    <div style="text-align: right; padding-bottom: 1%;">
-        <div id="bError">
+        
+        <div style="text-align: right; padding-bottom: 1%;">
+            <div id="bError">
+            </div>
+            <button id="blogPreview" type="button" class="btn btn-primary">Preview</button>
+            <button id="blogSubmit" type="button" class="btn btn-success">Submit</button>
         </div>
-        <button id="blogPreview" type="button" class="btn btn-primary">Preview</button>
-        <button id="blogSubmit" type="button" class="btn btn-success">Submit</button>
-    </div>
+    </form>
 
     <div th:replace="fragments/layout :: footer"></div>
 
@@ -69,5 +84,5 @@
 </html>
 <script type="text/javascript" src="/plugin/editormd/editormd.min.js"></script>
 <script>
-   
+   $('#blog-tags').tagsInput();
 </script>

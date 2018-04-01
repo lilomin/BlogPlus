@@ -31,7 +31,7 @@ public interface ManagerDao {
 	int updateBlog(Blog blog);
 	
 	@Select(
-			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog where user_id = #{userId} and hidden = 0" +
+			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog where user_id = #{userId} and hidden = 0 " +
 					"order by create_time limit #{limit} offset #{offset}"
 	)
 	@Results({
