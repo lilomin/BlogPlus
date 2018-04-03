@@ -1,5 +1,6 @@
 package org.raymon.xyz.blogplus.controller;
 
+import org.raymon.xyz.blogplus.common.constant.CommonConstant;
 import org.raymon.xyz.blogplus.common.result.Result;
 import org.raymon.xyz.blogplus.common.result.ResultUtils;
 import org.raymon.xyz.blogplus.model.user.LoginParam;
@@ -68,7 +69,7 @@ public class UserController {
 			return ResultUtils.fail("incorrect password!");
 		}
 		// 设置session
-		session.setAttribute(WebSecurityConfig.SESSION_KEY, u);
+		session.setAttribute(CommonConstant.SESSION_KEY, u);
 		return ResultUtils.success(u);
 	}
 	

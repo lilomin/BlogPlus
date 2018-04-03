@@ -10,8 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 public class WebSecurityConfig implements WebMvcConfigurer {
 	
-	public static final String SESSION_KEY = "user";
-	
 	@Bean
 	public SecurityInterceptor getSecurityInterceptor() {
 		return new SecurityInterceptor();

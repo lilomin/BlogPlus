@@ -11,10 +11,10 @@
     <div th:replace="fragments/layout :: header-cover"></div>
 
     <div class="home-card container-fluid">
-        <div class="row wow fadeInRight" data-wow-duration="2s">
+        <div class="row" data-wow-duration="2s">
             <div th:replace="fragments/card :: card"></div>
         </div>
-        <br></br>
+        <br>
         <div class="row justify-content-center">
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
@@ -31,10 +31,10 @@
 <script src="/plugin/wow/wow.min.js"></script>
 <script th:inline="javascript">
     new WOW().init();
-    var app = {};
-    app.totalPage = [[${totalPage}]] || 1;
+    var paga = {};
+    paga.totalPage = [[${totalPage}]] || 1;
 
-    app.getPaginationItems = function() {
+    paga.getPaginationItems = function() {
         var items = [];
 
         var perviousItem =  [
@@ -50,7 +50,7 @@
         ].join('');
 
        items.push(perviousItem);
-        for(var index=1; index<=app.totalPage; index++) {
+        for(var index=1; index<=paga.totalPage; index++) {
             var pageItem = [
                 '<li class="page-item">',
                     '<a class="page-link" href="#">'+ index +'</a>',
@@ -64,7 +64,7 @@
    };
 
     function init() {
-        var items = app.getPaginationItems();
+        var items = paga.getPaginationItems();
         $(".row .pagination").append(items);
     }
 

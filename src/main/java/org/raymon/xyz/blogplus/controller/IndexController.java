@@ -1,8 +1,10 @@
 package org.raymon.xyz.blogplus.controller;
 
+import org.raymon.xyz.blogplus.common.constant.CommonConstant;
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.file.FileVO;
 import org.raymon.xyz.blogplus.model.manager.Blog;
+import org.raymon.xyz.blogplus.security.WebSecurityConfig;
 import org.raymon.xyz.blogplus.service.FileService;
 import org.raymon.xyz.blogplus.service.ManagerService;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -21,8 +24,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class IndexController {
-	
-	private static final String DEFAULT_USER = "1";
 	
 	@Resource
 	private ManagerService managerService;
@@ -43,13 +44,11 @@ public class IndexController {
 	
 	/**
 	 * 博客首页
-	 * @param userId
-	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/home")
-	public String toHome(@RequestParam(value = "userId", defaultValue = DEFAULT_USER) String userId, Model model) {
-		Page<Blog> result = managerService.getBlogList(userId, 1, 10);
+	public String toHome(Model model) {
+		Page<Blog> result = managerService.getBlogList(CommonConstant.DEFAULT_USER, 1, 6);
 		model.addAttribute("list", result.getList());
 		model.addAttribute("currentPage", result.getCurrentPage());
 		model.addAttribute("totalPage", result.getTotal() / result.getPageSize() + 1);
@@ -74,11 +73,11 @@ public class IndexController {
 	 * @return
 	 */
 	@RequestMapping(value = "/post/{year}/{month}/{day}/{title}", method = RequestMethod.GET)
-	public String blogPost(@RequestParam(value = "userId", defaultValue = DEFAULT_USER) String userId,
-	                       @PathVariable("title") String title, Model model) {
+	public String blogPost(@RequestParam(value = "userId", defaultValue = CommonConstant.DEFAULT_USER) String userId,
+	                       @PathVariable("title") String title, Model model, HttpSession session) {
 		Blog result = managerService.getByBlogTitle(userId, title);
 		if (result == null) {
-			return toHome(userId, model);
+			return toHome(model);
 		}
 		model.addAttribute("blog", result);
 		return "post";

@@ -32,7 +32,7 @@ public interface ManagerDao {
 	
 	@Select(
 			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog where user_id = #{userId} and hidden = 0 " +
-					"order by create_time limit #{limit} offset #{offset}"
+					"order by create_time desc limit #{limit} offset #{offset}"
 	)
 	@Results({
 			@Result(property = "blogId", column = "blog_id"),

@@ -1,44 +1,44 @@
 <th:block th:fragment="card" th:with="size=${#lists.size(list)}">
-    <div class="card-deck" th:if="${size le 3}">
+    <div class="card-deck wow fadeInRight" th:if="${size le 3}">
         <div class="card" th:each="blog : ${list}">
             <img class="card-img-top" th:src="@{${blog.image}}" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title" th:text="${blog.title}">Card title</h5>
-                <p class="card-text" th:text="${blog.description}"></p>
+                <p class="card-text card-desc" th:text="${blog.description}"></p>
                 <p class="card-text">
                     <small class="text-muted" th:text="${blog.createDay}"></small>
-                    <a th:href="@{post/{postId}(postId=${blog.path})}" style="float:right;">detail>></a>
+                    <a th:href="@{post/{postId}(postId=${blog.path})}" style="float:right;">detail<span>>></span></a>
                 </p>
             </div>
         </div>
     </div>
 
-    <div class="card-deck" th:if="${size gt 3}">
+    <div class="card-deck wow fadeInRight" th:if="${size gt 3}">
         <th:block th:each="blog,stat : ${list}">
             <div class="card" th:if="${stat.index lt 3}">
                 <img class="card-img-top" th:src="@{${blog.image}}" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${blog.title}">Card title</h5>
-                    <p class="card-text" th:text="${blog.description}"></p>
+                    <p class="card-text card-desc" th:text="${blog.description}"></p>
                     <p class="card-text">
                         <small class="text-muted" th:text="${blog.createDay}"></small>
-                        <a th:href="@{post/{postId}(postId=${blog.path})}" style="float:right;">detail>></a>
+                        <a th:href="@{post/{postId}(postId=${blog.path})}" style="float:right;">detail<span>>></span></a>
                     </p>
                 </div>
             </div>
         </th:block>
     </div>
 
-    <div class="card-deck" th:if="${size gt 3}">
+    <div class="card-deck wow fadeInLeft" th:if="${size gt 3}">
         <th:block th:each="blog,stat : ${list}">
             <div class="card" th:if="${stat.index ge 3}">
                 <img class="card-img-top" th:src="@{${blog.image}}" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${blog.title}">Card title</h5>
-                    <p class="card-text" th:text="${blog.description}"></p>
+                    <p class="card-text card-desc" th:text="${blog.description}"></p>
                     <p class="card-text">
                         <small class="text-muted" th:text="${blog.createDay}"></small>
-                        <a th:href="@{post/{postId}(postId=${blog.path})}" style="float:right;">detail>></a>
+                        <a th:href="@{post/{postId}(postId=${blog.path})}" style="float:right;">detail<span>>></span></a>
                     </p>
                 </div>
             </div>

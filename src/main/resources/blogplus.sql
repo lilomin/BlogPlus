@@ -42,7 +42,6 @@ CREATE TABLE blog_tag (
   `user_id`     VARCHAR(32) NOT NULL,
   `tag`         VARCHAR(32) NOT NULL,
   `create_time` DATETIME    NOT NULL,
-  `update_time` DATETIME    NOT NULL,
   PRIMARY KEY (`blog_id`, `user_id`, `tag`)
 )
   ENGINE = InnoDB

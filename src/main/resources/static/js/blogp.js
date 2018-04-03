@@ -1,24 +1,88 @@
-$(document).ready(function () {
-    if ($('.editormd').length > 0) {
-        initEditormd();
+var app = {};
+app.clickTimes = 0;
+// app.totalPage = [[${totalPage}]] || 1;
+
+// app.intBlogList = function() {
+//     var totalPage = 0;
+//     var blogList = app.getBlogList(1, 6);
+//
+//     var firstGroup = '<div class="card-deck wow fadeInRight">';
+//     var lastGroup = '<div class="card-deck wow fadeInLeft">';
+//     if (blogList.length > 0) {
+//         totalPage = blogList.total;
+//         for (var index=1; index<=blog in blogList) {
+//
+//         }
+//         this.generatePagination(blogList.currentPage, totalPage);
+//     }
+// };
+
+app.generatePagination = function (currentPage, totalPage) {
+    var items = [];
+
+    var perviousItem =  [
+        '<li class="page-item disabled pervious">',
+        '<a class="page-link" href="#" tabindex="-1">Previous</a>',
+        '</li>'
+    ].join('');
+
+    var nextItem = [
+        '<li class="page-item">',
+        '<a class="page-link" href="#">Next</a>',
+        '</li>'
+    ].join('');
+
+    items.push(perviousItem);
+    for(var index=1; index<=totalPage; index++) {
+        var pageItem = [
+            '<li class="page-item">',
+            index === currentPage ? '<a class="page-link" href="/">'+ index +'</a>' : '<a class="page-link" href="/">'+ index +'</a>',
+            '</li>'
+        ].join('');
+        items.push(pageItem);
     }
+    items.push(nextItem);
+    $(".row .pagination").append(items.join(''));
+};
 
-    var clickTimes = 0;
+app.getBlogList = function (currentPage, pageSize) {
+    var blogList = [];
+    $.ajax({
+        type: "GET",
+        url: "/api/v1/manager/list",
+        data: {
+            currentPage: currentPage,
+            pageSize: pageSize
+        },
+        success: function (data, status) {
+            if (data.success) {
+                blogList = data.data;
+            } else {
+                var errorMsg = "<p style=\"color:red;\">" + data.msg + "</p>";
+                alert(errorMsg);
+            }
+        }
+    });
+    return blogList;
+};
 
-    cleanClickTimes = function () {
-        clickTimes = 0;
-    };
-
-    $('.navbar').click(function () {
-        setTimeout(cleanClickTimes, 5000);
-        clickTimes = parseInt(clickTimes) + 1;
-        console.log(clickTimes);
-        if (clickTimes == '5') {
+app.loginBtnDisplay = function () {
+    $('.navbar').bind('click', function () {
+        setTimeout(app.cleanClickTimes, 5000);
+        app.clickTimes = parseInt(app.clickTimes) + 1;
+        console.log(app.clickTimes);
+        if (app.clickTimes === 5) {
             $('.login-btn').fadeIn('slow');
         }
     });
+};
 
-    $('#lBtn').click(function () {
+app.cleanClickTimes = function () {
+    app.clickTimes = 0;
+};
+
+app.loginClickBtn = function () {
+    $('#lBtn').bind('click', function () {
         $('#lError').empty();
         $.ajax({
             type: "POST",
@@ -30,7 +94,7 @@ $(document).ready(function () {
                 password: $('#lPassword').val()
             }),
             success: function (data, status) {
-                if (data.code == "1") {
+                if (data.success) {
                     location.reload();
                 } else {
                     var errorMsg = "<p style=\"color:red;\">" + data.msg + "</p>";
@@ -39,12 +103,16 @@ $(document).ready(function () {
             }
         });
     });
+};
 
-    $('#blogPreview').click(function () {
+app.blogPreview = function () {
+    $('#blogPreview').bind('click', function () {
         $(".fa-desktop[name='preview']").parent().trigger('click');
     });
+};
 
-    $('#blogSubmit').click(function () {
+app.blogSubmitClick = function () {
+    $('#blogSubmit').bind('click', function () {
         $.ajax({
             type: "POST",
             url: "/api/v1/manager/save",
@@ -54,10 +122,11 @@ $(document).ready(function () {
                 title: $('#blog-title').val(),
                 description: $('#blog-desc').val(),
                 content: $('#editorHtml').val(),
-                userId: $('#userId').val()
+                userId: $('#userId').val(),
+                tags: $('#blog-tags').val().split(",")
             }),
             success: function (data, status) {
-                if (data.code == "1") {
+                if (data.success) {
                     location.reload();
                 } else {
                     var errorMsg = "<p style=\"color:red;\">" + data.msg + "</p>";
@@ -66,10 +135,10 @@ $(document).ready(function () {
             }
         });
     });
-});
+};
 
-function initEditormd() {
-    var editormdContainer = $(function () {
+app.initEditormd = function() {
+    $(function () {
         editormd("editormd-container", {
             width: "100%",
             height: 660,
@@ -138,4 +207,19 @@ function initEditormd() {
             }
         });
     });
-}
+};
+
+app.init = function() {
+    if ($('.editormd').length > 0) {
+        app.initEditormd();
+        app.blogPreview();
+        app.blogSubmitClick();
+    }
+
+    app.loginBtnDisplay();
+    app.loginClickBtn();
+};
+
+$(function () {
+    app.init();
+});
