@@ -4,7 +4,6 @@ import org.raymon.xyz.blogplus.common.constant.CommonConstant;
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.file.FileVO;
 import org.raymon.xyz.blogplus.model.manager.Blog;
-import org.raymon.xyz.blogplus.security.WebSecurityConfig;
 import org.raymon.xyz.blogplus.service.FileService;
 import org.raymon.xyz.blogplus.service.ManagerService;
 import org.springframework.stereotype.Controller;
@@ -53,6 +52,21 @@ public class IndexController {
 		model.addAttribute("currentPage", result.getCurrentPage());
 		model.addAttribute("totalPage", result.getTotal() / result.getPageSize() + 1);
 		return "home";
+	}
+	
+	@RequestMapping("/achieve")
+	public String toAchieve(Model model) {
+		Page<Blog> result = managerService.getBlogList(CommonConstant.DEFAULT_USER, 1, 6);
+		model.addAttribute("list", result.getList());
+		model.addAttribute("currentPage", result.getCurrentPage());
+		model.addAttribute("totalPage", result.getTotal() / result.getPageSize() + 1);
+		return "achieve";
+	}
+	
+	@RequestMapping("/about")
+	public String toMarkDownPage(Model model) {
+		// 通用的markdown模板页面
+		return "md_page";
 	}
 	
 	/**
