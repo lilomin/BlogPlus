@@ -74,6 +74,9 @@ public class ManagerServiceImpl implements ManagerService {
 	public Page<Blog> getBlogList(String userId, int currentPage, int pageSize) {
 		int total = managerDao.countAll(userId);
 		int offset = currentPage * pageSize - pageSize;
+		if (offset > total) {
+			return new Page<>();
+		}
 		List<Blog> dataList = managerDao.selectByPage(userId, pageSize, offset);
 		if (dataList != null && !dataList.isEmpty()) {
 			Iterator<Blog> it = dataList.iterator();

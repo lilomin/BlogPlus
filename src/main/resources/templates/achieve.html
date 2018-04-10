@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<!--head部分-->
 
 <head th:include="fragments/layout :: htmlhead" th:with="title='test'">
 </head>
@@ -10,7 +9,12 @@
 <div th:replace="fragments/layout :: header"></div>
 <div th:replace="fragments/layout :: header-cover"></div>
 
-<div class="main-contain container-fluid">list</div>
+<div class="main-contain container-fluid">
+    <section id="timeline" class="timeline">
+        <h1>博客时间轴</h1>
+
+    </section>
+</div>
 
 <div th:replace="fragments/layout :: footer"></div>
 </body>

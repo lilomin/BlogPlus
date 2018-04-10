@@ -1,6 +1,7 @@
 package org.raymon.xyz.blogplus.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,18 +11,21 @@ public class Page<T> implements Serializable {
 	
 	private static final long serialVersionUID = -1747089888152689052L;
 	private int total;
+	private int totalPage;
 	private int currentPage;
 	private int pageSize;
 	private List<T> list;
 	
 	public Page(int total, int currentPage, int pageSize, List<T> list) {
 		this.total = total;
+		this.totalPage = (total + pageSize - 1) / pageSize;
 		this.currentPage = currentPage;
 		this.pageSize = pageSize;
 		this.list = list;
 	}
 	
 	public Page() {
+		list = new ArrayList<>();
 	}
 	
 	public int getTotal() {
@@ -30,6 +34,14 @@ public class Page<T> implements Serializable {
 	
 	public void setTotal(int total) {
 		this.total = total;
+	}
+	
+	public int getTotalPage() {
+		return totalPage;
+	}
+	
+	public void setTotalPage(int totalPage) {
+		this.totalPage = totalPage;
 	}
 	
 	public int getCurrentPage() {

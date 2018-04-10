@@ -1,6 +1,10 @@
 var app = {};
 app.clickTimes = 0;
-// app.totalPage = [[${totalPage}]] || 1;
+app.totalPage = 1;
+app.currentPage = 1;
+
+app.timelinePageSize = 4;
+app.homeCardPageSize = 6;
 
 // app.intBlogList = function() {
 //     var totalPage = 0;
@@ -45,8 +49,7 @@ app.generatePagination = function (currentPage, totalPage) {
     $(".row .pagination").append(items.join(''));
 };
 
-app.getBlogList = function (currentPage, pageSize) {
-    var blogList = [];
+app.getBlogListData = function (currentPage, pageSize, successFn) {
     $.ajax({
         type: "GET",
         url: "/api/v1/manager/list",
@@ -56,14 +59,13 @@ app.getBlogList = function (currentPage, pageSize) {
         },
         success: function (data, status) {
             if (data.success) {
-                blogList = data.data;
+                successFn(data.data);
             } else {
                 var errorMsg = "<p style=\"color:red;\">" + data.msg + "</p>";
                 alert(errorMsg);
             }
         }
     });
-    return blogList;
 };
 
 app.loginBtnDisplay = function () {
@@ -136,6 +138,55 @@ app.blogSubmitClick = function () {
         });
     });
 };
+
+app.scrollBefore = 0;
+app.initTimeLine = function() {
+    var load = false;
+
+    app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline);
+    $(window).bind('scroll', function () {
+        var windowTop = $(window).scrollTop();
+        var lastTop = $(".demo-card:last-child").offset().top;
+        if (windowTop > app.scrollBefore && lastTop >= windowTop && lastTop < (windowTop + $(window).height())) {
+            load = true;
+            app.scrollBefore = windowTop;
+        }
+        if (!load) {
+            return;
+        }
+        if (app.totalPage > app.currentPage) {
+            app.currentPage = app.currentPage + 1;
+            console.log(app.currentPage);
+            app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline);
+        }
+    });
+}
+
+app.loadTimeline = function (data) {
+    app.totalPage = data.totalPage;
+    var list = data.list;
+    var cardWrapper = '<div class="demo-card-wrapper">';
+    for (var index = 1; index <= list.length; index++) {
+        var blog = data.list[index - 1];
+        var num = app.timelinePageSize * (app.currentPage - 1) + index;
+        var strNum = index < 10 ? '0' + num : num;
+        var card = '<div class="demo-card demo-card-step' + index + '"><div class="head"><div class="number-box">' +
+                '<span>' + strNum + '</span></div><h2><span class=' +
+                '"small">' + blog.createDay + '</span><a href="post/' + blog.path + '">' + blog.title + '</a></h2></div><div class="body">' +
+                '<p>' + blog.description + '</p>' + 
+                // '<img src="' + blog.image + '" alt="Graphic">' +
+                '</div></div>';
+        cardWrapper = cardWrapper + card;
+    }
+    cardWrapper = cardWrapper + '</div>';
+    $('.timeline').append(cardWrapper);
+
+    if (app.currentPage >= app.totalPage) {
+        if ($('.timeline .timeline-end').length <= 0) {
+            $('.timeline').append('<h1 class="timeline-end">没啦(>。<)</h1>');
+        }
+    }
+}
 
 app.initEditormd = function() {
     $(function () {
@@ -214,6 +265,10 @@ app.init = function() {
         app.initEditormd();
         app.blogPreview();
         app.blogSubmitClick();
+    }
+
+    if ($(".timeline").length > 0) {
+        app.initTimeLine();
     }
 
     app.loginBtnDisplay();
