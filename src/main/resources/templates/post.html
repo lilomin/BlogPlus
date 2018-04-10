@@ -15,11 +15,17 @@
                 <div class="post-header">
                     <h1 th:text="${blog.title}"></h1>
                     <div class="post-info">
-                        <embed src="/images/svg/octoface.svg" width="20" height="20" type="image/svg+xml"></embed>
+                        <embed src="/images/svg/person.svg" width="20" height="20" type="image/svg+xml"></embed>
                         <small class="text-muted" th:text="${blog.author}"></small>
-                        &nbsp;
                         <embed src="/images/svg/calendar.svg" width="20" height="20" type="image/svg+xml"></embed>
                         <small class="text-muted" th:text="${blog.createDay}"></small>
+                        &nbsp;
+                        <th:block th:if="${blog.tags != null and blog.tags.size() gt 0}">
+                            <th:block th:each="tag : ${blog.tags}">
+                                <embed src="/images/svg/tag.svg" width="20" height="20" type="image/svg+xml"></embed>
+                                <small class="text-muted" th:text="${tag}"></small>
+                            </th:block>
+                        </th:block>
                     </div>
                 </div>
                 <th:block th:utext="${blog.content}"></th:block>

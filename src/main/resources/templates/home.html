@@ -12,7 +12,7 @@
 
     <div class="main-contain container-fluid">
         <div class="row" data-wow-duration="2s">
-            <div th:replace="fragments/card :: card"></div>
+            <div id="home-card"></div>
         </div>
         <br>
         <div class="row justify-content-center">
@@ -31,45 +31,6 @@
 <script src="/plugin/wow/wow.min.js"></script>
 <script th:inline="javascript">
     new WOW().init();
-    var paga = {};
-    paga.totalPage = [[${totalPage}]] || 1;
-
-    paga.getPaginationItems = function() {
-        var items = [];
-
-        var perviousItem =  [
-            '<li class="page-item disabled pervious">',
-                '<a class="page-link" href="#" tabindex="-1">Previous</a>',
-            '</li>'
-        ].join('');
-
-        var nextItem = [
-            '<li class="page-item">',
-                '<a class="page-link" href="#">Next</a>',
-            '</li>'
-        ].join('');
-
-       items.push(perviousItem);
-        for(var index=1; index<=paga.totalPage; index++) {
-            var pageItem = [
-                '<li class="page-item">',
-                    '<a class="page-link" href="#">'+ index +'</a>',
-                '</li>'
-            ].join('');
-            items.push(pageItem);
-        }
-        items.push(nextItem);
-        return items.join('');
-       
-   };
-
-    function init() {
-        var items = paga.getPaginationItems();
-        $(".row .pagination").append(items);
-    }
-
-    init();
-   
 </script>
 
 </html>

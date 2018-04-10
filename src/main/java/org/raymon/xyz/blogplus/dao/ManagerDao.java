@@ -47,7 +47,7 @@ public interface ManagerDao {
 	List<Blog> selectByPage(@Param("userId") String userId, @Param("limit") int limit, @Param("offset") int offset);
 	
 	@Select(
-			"select count(1) from blog where user_id = #{userId}"
+			"select count(1) from blog where user_id = #{userId} and hidden = 0 "
 	)
 	int countAll(String userId);
 	

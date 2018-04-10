@@ -6,48 +6,101 @@ app.currentPage = 1;
 app.timelinePageSize = 4;
 app.homeCardPageSize = 6;
 
-// app.intBlogList = function() {
-//     var totalPage = 0;
-//     var blogList = app.getBlogList(1, 6);
-//
-//     var firstGroup = '<div class="card-deck wow fadeInRight">';
-//     var lastGroup = '<div class="card-deck wow fadeInLeft">';
-//     if (blogList.length > 0) {
-//         totalPage = blogList.total;
-//         for (var index=1; index<=blog in blogList) {
-//
-//         }
-//         this.generatePagination(blogList.currentPage, totalPage);
-//     }
-// };
+app.initBlogCardList = function() {
+    var totalPage = 0;
+    app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
+};
 
-app.generatePagination = function (currentPage, totalPage) {
+app.loadHomeCard = function (data) {
+    app.totalPage = data.totalPage;
+    var list = data.list;
+    
+    var cardDeck_1 = '<div class="card-deck wow fadeInRight">';
+    var cardDeck_2 = '<div class="card-deck wow fadeInLeft">';
+    for (var index = 1; index <= list.length; index++) {
+        var blog = data.list[index - 1];
+        
+        var card = '<div class="card"><img class="card-img-top" src="' + blog.image + '" alt="Card image cap">' +
+                '<div class="card-body"><h5 class="card-title">' + blog.title + '</h5>' + 
+                '<p class="card-text card-desc">' + blog.description + '</p>' + 
+                '<p class="card-text">' + 
+                '<small class="text-muted">' + blog.createDay + '</small><a href="post/' + blog.path + '" ' +
+                'style="float:right;">详情<span>>></span></a></p></div></div>';
+
+        if (index <= app.homeCardPageSize / 2) {
+            cardDeck_1 += card;
+        } else {
+            cardDeck_2 += card;
+        }
+    }
+    cardDeck_1 += '</div>';
+    cardDeck_2 += '</div>';
+    var homeCard = $('#home-card');
+    $(homeCard).empty();
+    $(homeCard).append(cardDeck_1);
+    if (list.length > app.homeCardPageSize / 2) {
+        $(homeCard).append(cardDeck_2);
+    }
+
+    $('.row .pagination').empty();
+    app.generatePagination();
+
+    $("html,body").animate({scrollTop:0},500);
+}
+
+app.generatePagination = function () {
     var items = [];
 
     var perviousItem =  [
-        '<li class="page-item disabled pervious">',
-        '<a class="page-link" href="#" tabindex="-1">Previous</a>',
+        app.currentPage === 1 ? '<li class="page-item disabled pervious">' : '<li class="page-item pervious">',
+        '<a id="-1" class="page-link" href="javascript:;" aria-label="Previous">' +
+        '<span aria-hidden="true">&laquo;</span>' +
+        '<span class="sr-only">Previous</span></a>',
         '</li>'
     ].join('');
 
     var nextItem = [
-        '<li class="page-item">',
-        '<a class="page-link" href="#">Next</a>',
+        app.currentPage === app.totalPage ? '<li class="page-item disabled">' : '<li class="page-item">',
+        '<a id="0" class="page-link" href="javascript:;" aria-label="Next">' +
+        '<span aria-hidden="true">&raquo;</span>' +
+        '<span class="sr-only">Next</span></a>',
         '</li>'
     ].join('');
 
     items.push(perviousItem);
-    for(var index=1; index<=totalPage; index++) {
+    for (var index = 1; index <= app.totalPage; index++) {
         var pageItem = [
-            '<li class="page-item">',
-            index === currentPage ? '<a class="page-link" href="/">'+ index +'</a>' : '<a class="page-link" href="/">'+ index +'</a>',
+            index === app.currentPage ? '<li class="page-item active">' : '<li class="page-item">',
+            '<a id="' + index + '" class="page-link" href="javascript:;">' + index + '</a>',
             '</li>'
         ].join('');
         items.push(pageItem);
     }
     items.push(nextItem);
     $(".row .pagination").append(items.join(''));
+    app.bindPagination();
 };
+
+app.bindPagination = function () {
+    var pageLinks = $('.pagination .page-item .page-link');
+    if (!pageLinks || !pageLinks.length) 
+        return;
+
+    $(pageLinks).unbind('click').bind('click', function () {
+        var page = Number($(this).attr("id"));
+        if (page === 0) {
+            // Next
+            app.currentPage++;
+        } else
+        if (page === -1) {
+            // Pervious
+            app.currentPage--;
+        } else {
+            app.currentPage = page;
+        }
+        app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
+    });
+}
 
 app.getBlogListData = function (currentPage, pageSize, successFn) {
     $.ajax({
@@ -123,7 +176,7 @@ app.blogSubmitClick = function () {
             data: JSON.stringify({
                 title: $('#blog-title').val(),
                 description: $('#blog-desc').val(),
-                content: $('#editorHtml').val(),
+                content: $('#editormd').val(),
                 userId: $('#userId').val(),
                 tags: $('#blog-tags').val().split(",")
             }),
@@ -165,7 +218,7 @@ app.initTimeLine = function() {
 app.loadTimeline = function (data) {
     app.totalPage = data.totalPage;
     var list = data.list;
-    var cardWrapper = '<div class="demo-card-wrapper">';
+    var cardWrapper = '<div class="demo-card-wrapper wow fadeInUp" data-wow-duration="2s" data-wow-delay="0.5s">';
     for (var index = 1; index <= list.length; index++) {
         var blog = data.list[index - 1];
         var num = app.timelinePageSize * (app.currentPage - 1) + index;
@@ -261,6 +314,10 @@ app.initEditormd = function() {
 };
 
 app.init = function() {
+    if ($('#home-card').length > 0) {
+        app.initBlogCardList();
+    }
+
     if ($('.editormd').length > 0) {
         app.initEditormd();
         app.blogPreview();

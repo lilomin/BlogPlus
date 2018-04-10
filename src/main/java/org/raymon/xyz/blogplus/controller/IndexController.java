@@ -64,9 +64,17 @@ public class IndexController {
 	}
 	
 	@RequestMapping("/about")
-	public String toMarkDownPage(Model model) {
-		// 通用的markdown模板页面
-		return "md_page";
+	public String toMarkDownPage(@RequestParam(value = "userId", defaultValue = CommonConstant.DEFAULT_USER) String userId,
+	                             Model model) {
+		// Blog blog = managerService.getByBlogTitle(CommonConstant.DEFAULT_USER, "about");
+		// model.addAttribute("blog", blog);
+		Blog result = managerService.getByBlogTitle(userId, CommonConstant.ABOUT_TITLE);
+		if (result == null) {
+			return toHome(model);
+		}
+		result.setTitle("关于我");
+		model.addAttribute("blog", result);
+		return "post";
 	}
 	
 	/**

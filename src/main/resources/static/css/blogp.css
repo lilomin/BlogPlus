@@ -8,7 +8,7 @@ html, body {
     max-width: none;
     background: url(/images/bg.jpg) top left no-repeat #666666;
     background-size: cover;
-    position: absolute;
+    position: fixed;
     height: auto;
     z-index: -1;
     top: 0;
@@ -53,6 +53,11 @@ body .main-contain {
 
 pre code {
     border-radius: 5px;
+}
+
+.post-content ul, 
+.post-content ol {
+    margin-left: 2rem;
 }
 
 .post-header {
@@ -268,7 +273,7 @@ blockquote p {
         display: flex;
         flex-flow: column wrap;
         width: 1170px;
-        height: 900px;
+        height: 700px;
         margin: 0 auto;
     }
 }
@@ -343,6 +348,10 @@ blockquote p {
     #timeline .demo-card:nth-child(2) {
         margin-top: 180px;
     }
+
+    #timeline .demo-card:last-child {
+        margin-bottom: 0;
+    } 
 }
 
 #timeline .demo-card .head {

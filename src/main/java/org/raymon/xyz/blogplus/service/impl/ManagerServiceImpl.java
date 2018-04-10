@@ -1,7 +1,9 @@
 package org.raymon.xyz.blogplus.service.impl;
 
+import org.raymon.xyz.blogplus.common.constant.CommonConstant;
 import org.raymon.xyz.blogplus.common.exception.BlogPlusException;
 import org.raymon.xyz.blogplus.common.exception.ExceptionEnum;
+import org.raymon.xyz.blogplus.common.utils.MarkDownUtils;
 import org.raymon.xyz.blogplus.common.utils.UUIDUtils;
 import org.raymon.xyz.blogplus.dao.BlogTagDao;
 import org.raymon.xyz.blogplus.dao.ManagerDao;
@@ -18,11 +20,14 @@ import org.springframework.util.Base64Utils;
 import org.thymeleaf.util.DateUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by lilm on 18-3-15.
@@ -57,6 +62,9 @@ public class ManagerServiceImpl implements ManagerService {
 			if (db != null) {
 				throw new BlogPlusException(ExceptionEnum.DATA_EXISTS);
 			}
+			if (CommonConstant.ABOUT_TITLE.equals(blog.getTitle())) {
+				blog.setHidden(true);
+			}
 			blog.setContent(Base64Utils.encodeToString(blog.getContent().getBytes()));
 			blog.setCreateTime(new Date());
 			blog.setUpdateTime(new Date());
@@ -89,6 +97,7 @@ public class ManagerServiceImpl implements ManagerService {
 				} else {
 					b.setPath(path);
 				}
+				b.setTags(generateBlogTags(blogTagDao.getTags(userId, b.getBlogId())));
 			}
 		}
 		return new Page<>(total, currentPage, pageSize, dataList);
@@ -122,6 +131,14 @@ public class ManagerServiceImpl implements ManagerService {
 		return day;
 	}
 	
+	private List<String> generateBlogTags(List<BlogTag> blogTags) {
+		if (blogTags == null || blogTags.size() <= 0) {
+			return new ArrayList<>();
+		}
+		
+		return blogTags.stream().map(BlogTag::getTag).collect(Collectors.toList());
+	}
+	
 	@Override
 	public Blog getByBlogId(String userId, String blogId) {
 		Blog blog = managerDao.selectByBlogId(userId, blogId);
@@ -131,7 +148,10 @@ public class ManagerServiceImpl implements ManagerService {
 			if (user != null) {
 				blog.setAuthor(user.getNickname());
 			}
-			blog.setContent(new String(Base64Utils.decodeFromString(blog.getContent())));
+			blog.setTags(generateBlogTags(blogTagDao.getTags(userId, blogId)));
+			String markdown = new String(Base64Utils.decodeFromString(blog.getContent()));
+			String content = MarkDownUtils.parseMarkDown2Html(markdown);
+			blog.setContent(content);
 		}
 		return blog;
 	}
@@ -145,7 +165,10 @@ public class ManagerServiceImpl implements ManagerService {
 			if (user != null) {
 				blog.setAuthor(user.getNickname());
 			}
-			blog.setContent(new String(Base64Utils.decodeFromString(blog.getContent())));
+			blog.setTags(generateBlogTags(blogTagDao.getTags(userId, blog.getBlogId())));
+			String markdown = new String(Base64Utils.decodeFromString(blog.getContent()));
+			String content = MarkDownUtils.parseMarkDown2Html(markdown);
+			blog.setContent(content);
 		}
 		return blog;
 	}
@@ -170,8 +193,11 @@ public class ManagerServiceImpl implements ManagerService {
 		if (tags == null || tags.isEmpty()) {
 			return true;
 		}
+		Set<String> tagSet = tags.stream()
+				.filter(tag -> tag != null && tag.trim().length() > 0)
+				.collect(Collectors.toSet());
 		int count = 0;
-		for (String tag : new HashSet<>(tags)) {
+		for (String tag : tagSet) {
 			BlogTag blogTag = new BlogTag(param.getBlogId(), param.getUserId(), tag);
 			blogTag.setCreateTime(new Date());
 			int flag = blogTagDao.saveBlogTag(blogTag);

@@ -7,32 +7,36 @@
 
     <div th:replace="fragments/layout :: header"></div>
 
-    <input id="userId" style="display:none;" th:value="${session.user.userId}"/>
+    <div th:if="${session.user != null}">
+        <input id="userId" style="display:none;" th:value="${session.user.userId}"/>
+    </div>
 
-    <form style="padding:2%;">
-        <div class="form-group">
-            <label>Title</label>
-            <input id="blog-title" type="text" class="form-control" placeholder="Enter title"/>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col">
-                    <label>Tags</label>
-                    <input class="form-control" name="tags" id="blog-tags"/>
-                </div>
-                <div class="col">
-                    <label>Cover Image</label>
-                    <div class="custom-file">
-                        <input id="blog-image" type="file" class="custom-file-input"/>
-                        <label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+    <form style="padding:4% 2% 2%;">
+        <th:block th:if="${session.user != null}">
+            <div class="form-group">
+                <label>Title</label>
+                <input id="blog-title" type="text" class="form-control" placeholder="Enter title"/>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12" style="margin-bottom: 1rem;">
+                        <label>Tags</label>
+                        <input class="form-control" name="tags" id="blog-tags"/>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <label>Cover Image</label>
+                        <div class="custom-file">
+                            <input id="blog-image" type="file" class="custom-file-input"/>
+                            <label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label>Description</label>
-            <textarea id="blog-desc" class="form-control" placeholder="Enter paragraph description"></textarea>
-        </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="blog-desc" class="form-control" placeholder="Enter paragraph description"></textarea>
+            </div>
+        </th:block>
         <div class="editormd" id="editormd-container">
             <textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc" id="editormd"></textarea>
         
@@ -41,7 +45,7 @@
             <textarea class="editormd-html-textarea" name="editorhtml" id="editorHtml"></textarea>
         </div>
         
-        <div style="text-align: right; padding-bottom: 1%;">
+        <div style="text-align: right; padding-bottom: 1%;" th:if="${session.user != null}">
             <div id="bError">
             </div>
             <button id="blogPreview" type="button" class="btn btn-primary">Preview</button>

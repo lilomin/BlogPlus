@@ -43,21 +43,32 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/home">Home
+                        <a class="nav-link" href="/home">首页
                             <!--<span class="sr-only">(current)</span>-->
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/achieve">Achieve</a>
+                        <a class="nav-link" href="/achieve">归档</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
+                        <a class="nav-link" href="/about">关于</a>
                     </li>
                     <span th:if="${session.user eq null}">
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <button type="button" class="login-btn btn btn-primary" style="display: none;border: none;" data-toggle="modal" data-target="#loginModal">
                                 Login
                             </button>
+                        </li> -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" 
+                               id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               管理
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item login-btn" data-toggle="modal" data-target="#loginModal">登录</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/edit_post">新的博客</a>
+                            </div>
                         </li>
                     </span>
                     <span th:if="${session.user ne null}">
@@ -66,9 +77,9 @@
                                id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/management">Blogs Management</a>
+                                <a class="dropdown-item" href="/management">博客管理</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/edit_post">New Post</a>
+                                <a class="dropdown-item" href="/edit_post">新的博客</a>
                             </div>
                         </li>
                     </span>

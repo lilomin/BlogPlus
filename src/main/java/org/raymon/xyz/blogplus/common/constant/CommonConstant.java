@@ -9,4 +9,6 @@ public class CommonConstant {
 	
 	public static final String SESSION_KEY = "user";
 	
+	public static final String ABOUT_TITLE = "about";
+	
 }
