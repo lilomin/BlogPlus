@@ -245,7 +245,7 @@ app.initEditormd = function() {
     $(function () {
         editormd("editormd-container", {
             width: "100%",
-            height: 660,
+            height: 760,
             //markdown : md,
             codeFold: true,
             syncScrolling: "single",
