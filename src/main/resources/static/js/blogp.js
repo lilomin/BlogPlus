@@ -6,8 +6,10 @@ app.currentPage = 1;
 app.timelinePageSize = 4;
 app.homeCardPageSize = 6;
 
+// first time to init the home card
+app.firstTimeInit = true;
+
 app.initBlogCardList = function() {
-    var totalPage = 0;
     app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
 };
 
@@ -15,8 +17,8 @@ app.loadHomeCard = function (data) {
     app.totalPage = data.totalPage;
     var list = data.list;
     
-    var cardDeck_1 = '<div class="card-deck wow fadeInRight">';
-    var cardDeck_2 = '<div class="card-deck wow fadeInLeft">';
+    var cardDeck_1 = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
+    var cardDeck_2 = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
     for (var index = 1; index <= list.length; index++) {
         var blog = data.list[index - 1];
         
@@ -45,7 +47,12 @@ app.loadHomeCard = function (data) {
     $('.row .pagination').empty();
     app.generatePagination();
 
-    $("html,body").animate({scrollTop:0},500);
+    if (app.firstTimeInit) {
+        app.firstTimeInit = false;
+        return;
+    }
+    var jumpTO = $('#home-card').offset().top;
+    $("html,body").animate({scrollTop:jumpTO},500);
 }
 
 app.generatePagination = function () {
@@ -218,7 +225,7 @@ app.initTimeLine = function() {
 app.loadTimeline = function (data) {
     app.totalPage = data.totalPage;
     var list = data.list;
-    var cardWrapper = '<div class="demo-card-wrapper wow fadeInUp" data-wow-duration="2s" data-wow-delay="0.5s">';
+    var cardWrapper = '<div class="demo-card-wrapper wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
     for (var index = 1; index <= list.length; index++) {
         var blog = data.list[index - 1];
         var num = app.timelinePageSize * (app.currentPage - 1) + index;
@@ -313,7 +320,23 @@ app.initEditormd = function() {
     });
 };
 
+app.loading = function () {
+    var loadingHtml = '<div class="loader"><div class="loader-inner"><div class="loader-line-wrap"><div' +
+            ' class="loader-line"></div></div><div class="loader-line-wrap"><div class="loade' +
+            'r-line"></div></div><div class="loader-line-wrap"><div class="loader-line"></div' +
+            '></div><div class="loader-line-wrap"><div class="loader-line"></div></div><div c' +
+            'lass="loader-line-wrap"><div class="loader-line"></div></div></div>';
+
+    $('html').append(loadingHtml).fadeIn();
+}
+
+app.removeLoading = function () {
+    $('.loader').fadeOut();
+}
+
 app.init = function() {
+    app.loading();
+
     if ($('#home-card').length > 0) {
         app.initBlogCardList();
     }
@@ -334,4 +357,8 @@ app.init = function() {
 
 $(function () {
     app.init();
+
+    setTimeout("app.removeLoading()", 500);
+
+    new WOW().init();
 });
