@@ -17,8 +17,8 @@ app.loadHomeCard = function (data) {
     app.totalPage = data.totalPage;
     var list = data.list;
     
-    var cardDeck_1 = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
-    var cardDeck_2 = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
+    var cardDeck_1 = '<div class="card-deck wow fadeInUp">';
+    var cardDeck_2 = '<div class="card-deck wow fadeInUp">';
     for (var index = 1; index <= list.length; index++) {
         var blog = data.list[index - 1];
         
@@ -185,11 +185,12 @@ app.blogSubmitClick = function () {
                 description: $('#blog-desc').val(),
                 content: $('#editormd').val(),
                 userId: $('#userId').val(),
-                tags: $('#blog-tags').val().split(",")
+                tags: $('#blog-tags').val().split(","),
+                blogId: $('#blogId').length > 0 ? $('#blogId').val() : null
             }),
             success: function (data, status) {
                 if (data.success) {
-                    location.reload();
+                    window.location.href="/management/1";
                 } else {
                     var errorMsg = "<p style=\"color:red;\">" + data.msg + "</p>";
                     $('#bError').append(errorMsg);
@@ -206,7 +207,7 @@ app.initTimeLine = function() {
     app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline);
     $(window).bind('scroll', function () {
         var windowTop = $(window).scrollTop();
-        var lastTop = $(".demo-card:last-child").offset().top;
+        var lastTop = $(".time-card-wrapper:last").children(".time-card:last-child").offset().top;
         if (windowTop > app.scrollBefore && lastTop >= windowTop && lastTop < (windowTop + $(window).height())) {
             load = true;
             app.scrollBefore = windowTop;
@@ -225,12 +226,15 @@ app.initTimeLine = function() {
 app.loadTimeline = function (data) {
     app.totalPage = data.totalPage;
     var list = data.list;
-    var cardWrapper = '<div class="demo-card-wrapper wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
+    var cardWrapper = '<div class="time-card-wrapper wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
+    if (list.length <= 2) {
+        cardWrapper = '<div class="time-card-wrapper wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" style="height:420px;">';
+    }
     for (var index = 1; index <= list.length; index++) {
         var blog = data.list[index - 1];
-        var num = app.timelinePageSize * (app.currentPage - 1) + index;
-        var strNum = index < 10 ? '0' + num : num;
-        var card = '<div class="demo-card demo-card-step' + index + '"><div class="head"><div class="number-box">' +
+        var num = app.timelinePageSize * (data.currentPage - 1) + index;
+        var strNum = num < 10 ? '0' + num : num;
+        var card = '<div class="time-card time-card-step' + index + '"><div class="head"><div class="number-box">' +
                 '<span>' + strNum + '</span></div><h2><span class=' +
                 '"small">' + blog.createDay + '</span><a href="post/' + blog.path + '">' + blog.title + '</a></h2></div><div class="body">' +
                 '<p>' + blog.description + '</p>' + 
@@ -241,12 +245,39 @@ app.loadTimeline = function (data) {
     cardWrapper = cardWrapper + '</div>';
     $('.timeline').append(cardWrapper);
 
-    if (app.currentPage >= app.totalPage) {
+    if (data.currentPage >= app.totalPage) {
         if ($('.timeline .timeline-end').length <= 0) {
-            $('.timeline').append('<h1 class="timeline-end">没啦(>。<)</h1>');
+            $('.timeline').append('<h1 class="timeline-end">没有啦~</h1>');
         }
     }
 }
+
+app.blogSwitchClick = function () {
+    $('[id=blogSwitch]').bind('click', function () {
+        $.ajax({
+            type: "GET",
+            url: "/api/v1/manager/switch",
+            data: {
+                blogId: $(this).parent().parent().children("th").attr("id"),
+            },
+            success: function (data, status) {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    var errorMsg = "<p style=\"color:red;\">" + data.msg + "</p>";
+                    $('#bError').append(errorMsg);
+                }
+            }
+        });
+    });
+};
+
+app.blogEditClick = function () {
+    $('[id=blogEdit]').bind('click', function () {
+        var blogId = $(this).parent().parent().children("th").attr("id");
+        window.location.href='/edit_post?blogId=' + blogId;
+    });
+};
 
 app.initEditormd = function() {
     $(function () {
@@ -336,6 +367,9 @@ app.removeLoading = function () {
 
 app.init = function() {
     app.loading();
+
+    app.blogEditClick();
+    app.blogSwitchClick();
 
     if ($('#home-card').length > 0) {
         app.initBlogCardList();

@@ -1,11 +1,17 @@
 package org.raymon.xyz.blogplus.controller;
 
 import org.raymon.xyz.blogplus.common.constant.CommonConstant;
+import org.raymon.xyz.blogplus.common.exception.BlogPlusException;
+import org.raymon.xyz.blogplus.common.exception.ExceptionEnum;
+import org.raymon.xyz.blogplus.common.result.ResultUtils;
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.file.FileVO;
 import org.raymon.xyz.blogplus.model.manager.Blog;
+import org.raymon.xyz.blogplus.model.user.User;
 import org.raymon.xyz.blogplus.service.FileService;
 import org.raymon.xyz.blogplus.service.ManagerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,27 +53,17 @@ public class IndexController {
 	 */
 	@RequestMapping("/home")
 	public String toHome(Model model) {
-		Page<Blog> result = managerService.getBlogList(CommonConstant.DEFAULT_USER, 1, 6);
-		model.addAttribute("list", result.getList());
-		model.addAttribute("currentPage", result.getCurrentPage());
-		model.addAttribute("totalPage", result.getTotal() / result.getPageSize() + 1);
 		return "home";
 	}
 	
 	@RequestMapping("/achieve")
 	public String toAchieve(Model model) {
-		Page<Blog> result = managerService.getBlogList(CommonConstant.DEFAULT_USER, 1, 6);
-		model.addAttribute("list", result.getList());
-		model.addAttribute("currentPage", result.getCurrentPage());
-		model.addAttribute("totalPage", result.getTotal() / result.getPageSize() + 1);
 		return "achieve";
 	}
 	
 	@RequestMapping("/about")
 	public String toMarkDownPage(@RequestParam(value = "userId", defaultValue = CommonConstant.DEFAULT_USER) String userId,
 	                             Model model) {
-		// Blog blog = managerService.getByBlogTitle(CommonConstant.DEFAULT_USER, "about");
-		// model.addAttribute("blog", blog);
 		Blog result = managerService.getByBlogTitle(userId, CommonConstant.ABOUT_TITLE);
 		if (result == null) {
 			return toHome(model);
@@ -83,8 +79,25 @@ public class IndexController {
 	 * @return
 	 */
 	@RequestMapping("/edit_post")
-	public String newPost(Model model) {
+	public String newPost(Model model, @RequestParam(value = "blogId",required = false) String blogId, HttpSession session) {
+		User u = (User) session.getAttribute(CommonConstant.SESSION_KEY);
+		if (u != null && blogId != null && blogId.length() > 0) {
+			String userId = u.getUserId();
+			Blog blog = managerService.getByBlogIdMarkDown(userId, blogId);
+			model.addAttribute("blog", blog);
+		}
 		return "edit_post";
+	}
+	
+	@RequestMapping("/management/{page}")
+	public String management(Model model, @PathVariable("page") Integer page, HttpSession session) {
+		User u = (User) session.getAttribute(CommonConstant.SESSION_KEY);
+		if (u == null) {
+			throw new BlogPlusException(ExceptionEnum.SERVER_ERROR);
+		}
+		Page data = managerService.getBlogList(u.getUserId(), page, 10, true);
+		model.addAttribute("page", data);
+		return "management";
 	}
 	
 	/**

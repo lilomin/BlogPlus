@@ -8,6 +8,7 @@ public class BlogPlusException extends RuntimeException {
 	private ExceptionEnum e;
 	
 	public BlogPlusException(ExceptionEnum e) {
+		super(e.detail);
 		this.e = e;
 	}
 	

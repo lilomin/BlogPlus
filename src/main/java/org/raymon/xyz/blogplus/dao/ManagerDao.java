@@ -25,10 +25,12 @@ public interface ManagerDao {
 	int createBlog(Blog blog);
 	
 	@Update(
-			"update table blog set title = #{title}, content = #{content}, description = #{description}, update_time = #{updateTime}" +
+			"update blog set title = #{title}, content = #{content}, description = #{description}, update_time = #{updateTime}" +
 					"where blog_id = #{blogId} and user_id = #{userId}"
 	)
 	int updateBlog(Blog blog);
+	
+	
 	
 	@Select(
 			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog where user_id = #{userId} and hidden = 0 " +
@@ -50,6 +52,30 @@ public interface ManagerDao {
 			"select count(1) from blog where user_id = #{userId} and hidden = 0 "
 	)
 	int countAll(String userId);
+	
+	
+	@Select(
+			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog where user_id = #{userId}" +
+					"order by create_time desc limit #{limit} offset #{offset}"
+	)
+	@Results({
+			@Result(property = "blogId", column = "blog_id"),
+			@Result(property = "userId", column = "user_id"),
+			@Result(property = "title", column = "title"),
+			@Result(property = "description", column = "description"),
+			@Result(property = "hidden", column = "hidden"),
+			@Result(property = "image", column = "image"),
+			@Result(property = "createTime", column = "create_time"),
+			@Result(property = "updateTime", column = "update_time")
+	})
+	List<Blog> selectByPageIncludeHidden(@Param("userId") String userId, @Param("limit") int limit, @Param("offset") int offset);
+	
+	@Select(
+			"select count(1) from blog where user_id = #{userId}"
+	)
+	int countAllIncludeHidden(String userId);
+	
+	
 	
 	@Select(
 			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog " +
@@ -86,7 +112,7 @@ public interface ManagerDao {
 	Blog selectByBlogTitle(@Param("userId") String userId, @Param("title")String title);
 	
 	@Update(
-			"update table blog set hidden = #{hidden}, update_time = #{updateTime}" +
+			"update blog set hidden = #{hidden}, update_time = #{updateTime} " +
 					"where blog_id = #{blogId} and user_id = #{userId}"
 	)
 	int updateBlogStatus(@Param("userId") String userId, @Param("blogId") String blogId,

@@ -25,7 +25,7 @@ public interface ManagerService {
 	 * @param pageSize
 	 * @return
 	 */
-	Page<Blog> getBlogList(String userId, int currentPage, int pageSize);
+	Page<Blog> getBlogList(String userId, int currentPage, int pageSize, boolean includeHidden);
 	
 	/**
 	 * 根据博客id查询
@@ -34,6 +34,14 @@ public interface ManagerService {
 	 * @return
 	 */
 	Blog getByBlogId(String userId, String blogId);
+	
+	/**
+	 * 根据博客id查询
+	 * @param userId 用户id
+	 * @param blogId blogId
+	 * @return
+	 */
+	Blog getByBlogIdMarkDown(String userId, String blogId);
 	
 	/**
 	 * 根据博客标题查询

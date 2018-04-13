@@ -9,13 +9,14 @@
 
     <div th:if="${session.user != null}">
         <input id="userId" style="display:none;" th:value="${session.user.userId}"/>
+        <input id="blogId" style="display:none;" th:value="${blog eq null} ? '' : ${blog.blogId}"/>
     </div>
 
     <form style="padding:4% 2% 2%;">
         <th:block th:if="${session.user != null}">
             <div class="form-group">
                 <label>Title</label>
-                <input id="blog-title" type="text" class="form-control" placeholder="Enter title"/>
+                <input id="blog-title" type="text" class="form-control" placeholder="Enter title" th:value="${blog eq null} ? '' : ${blog.title}"/>
             </div>
             <div class="form-group">
                 <div class="row">
@@ -34,11 +35,11 @@
             </div>
             <div class="form-group">
                 <label>Description</label>
-                <textarea id="blog-desc" class="form-control" placeholder="Enter paragraph description"></textarea>
+                <textarea id="blog-desc" class="form-control" placeholder="Enter paragraph description" th:text="${blog eq null} ? '' : ${blog.description}"></textarea>
             </div>
         </th:block>
         <div class="editormd" id="editormd-container">
-            <textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc" id="editormd"></textarea>
+            <textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc" id="editormd" th:text="${blog eq null} ? '' : ${blog.content}"></textarea>
         
             <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
             <!-- html textarea 需要开启配置项 saveHTMLToTextarea == true -->

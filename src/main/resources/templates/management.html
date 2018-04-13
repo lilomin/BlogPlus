@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--head部分-->
+
+<head th:include="fragments/layout :: htmlhead" th:with="title='test'">
+</head>
+
+<body>
+
+    <div th:replace="fragments/layout :: header"></div>
+
+    <div class="container" style="margin-top: 5%;">
+        <div class="row">
+            <table class="table table-hover table-bordered" style="text-align:center;">
+                <thead class="thead-dark">
+                    <tr>
+                    <th scope="col">序号</th>
+                    <th scope="col">标题</th>
+                    <th scope="col">标签</th>
+                    <th scope="col">时间</th>
+                    <th scope="col">操作</th>
+                    </tr>
+                </thead>
+                <tbody th:each="blog,iter : ${page.list}">
+                    <tr>
+                    <th scope="row" th:text="${iter.index + 1}" th:id="${blog.blogId}"></th>
+                    <td th:text="${blog.title}"></td>
+                    <td th:text="${blog.tags}"></td>
+                    <td th:text="${blog.createDay}"></td>
+                    <td>
+                        <button id="blogEdit" type="button" class="btn btn-outline-primary">编辑</button>
+                        <th:block th:if="${blog.hidden eq true}">
+                            <button id="blogSwitch" type="button" class="btn btn-outline-success">发布</button>
+                        </th:block>
+                        <th:block th:if="${blog.hidden eq false}">
+                            <button id="blogSwitch" type="button" class="btn btn-outline-danger">隐藏</button>
+                        </th:block>
+                    </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+
+                <th:block th:each="i : ${#numbers.sequence(0, page.totalPage - 1)}">
+                    <th:block th:if="${i + 1 eq page.currentPage}">
+                            <li class="page-item active">
+                    </th:block>
+                    <th:block th:if="${i + 1 ne page.currentPage}">
+                            <li class="page-item">
+                    </th:block>
+                        <a class="page-link" th:href="@{/management/{index}(index = ${i + 1})}" th:text="${i + 1}"></a>
+                    </li>
+                </th:block>
+
+                </ul>
+              </nav>
+        </div>
+    </div>
+
+    <div th:replace="fragments/layout :: footer"></div>
+
+</body>

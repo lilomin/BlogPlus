@@ -36,12 +36,12 @@ html, body {
     width: 100%;
     height: auto;
     line-height: 60px;
-    background-color: #496487d6;
+    background-color: #496487;
     position: relative;
     bottom: 0;
     color: #fff;
     padding-top: 2%;
-    margin-top: 4%;
+    /*margin-top: 4%;*/
 }
 
 .footer .list-inline li {
@@ -82,6 +82,7 @@ body .main-contain {
     background-color: white;
     height: auto;
     min-height: 500px;
+    padding-bottom: 3%;
 }
 
 .container-fluid .card {
@@ -217,8 +218,8 @@ blockquote p {
 }
 
 @media (min-width: 1000px) {
-    #timeline .demo-card:nth-child(odd) .head::after,
-    #timeline .demo-card:nth-child(even) .head::after {
+    #timeline .time-card:nth-child(odd) .head::after,
+    #timeline .time-card:nth-child(even) .head::after {
         position: absolute;
         content: "";
         width: 0;
@@ -226,8 +227,8 @@ blockquote p {
         border-top: 15px solid transparent;
         border-bottom: 15px solid transparent;
     }
-    #timeline .demo-card:nth-child(odd) .head::before,
-    #timeline .demo-card:nth-child(even) .head::before {
+    #timeline .time-card:nth-child(odd) .head::before,
+    #timeline .time-card:nth-child(even) .head::before {
         position: absolute;
         content: "";
         width: 9px;
@@ -241,27 +242,27 @@ blockquote p {
 
 /* Some Cool Stuff */
 
-.demo-card:nth-child(1) {
+.time-card:nth-child(1) {
     order: 1;
 }
 
-.demo-card:nth-child(2) {
+.time-card:nth-child(2) {
     order: 4;
 }
 
-.demo-card:nth-child(3) {
+.time-card:nth-child(3) {
     order: 2;
 }
 
-.demo-card:nth-child(4) {
+.time-card:nth-child(4) {
     order: 5;
 }
 
-.demo-card:nth-child(5) {
+.time-card:nth-child(5) {
     order: 3;
 }
 
-.demo-card:nth-child(6) {
+.time-card:nth-child(6) {
     order: 6;
 }
 
@@ -300,13 +301,13 @@ blockquote p {
     margin-bottom: 45px;
 }
 
-#timeline .demo-card-wrapper {
+#timeline .time-card-wrapper {
     position: relative;
     margin: auto;
 }
 
 @media (min-width: 1000px) {
-    #timeline .demo-card-wrapper {
+    #timeline .time-card-wrapper {
         display: flex;
         flex-flow: column wrap;
         width: 1170px;
@@ -315,7 +316,7 @@ blockquote p {
     }
 }
 
-#timeline .demo-card-wrapper::after {
+#timeline .time-card-wrapper::after {
     z-index: 1;
     content: "";
     position: absolute;
@@ -326,12 +327,12 @@ blockquote p {
 }
 
 @media (min-width: 1000px) {
-    #timeline .demo-card-wrapper::after {
+    #timeline .time-card-wrapper::after {
         border-left: 1px solid #bdbdbd;
     }
 }
 
-#timeline .demo-card {
+#timeline .time-card {
     position: relative;
     display: block;
     margin: 10px auto 80px;
@@ -340,58 +341,58 @@ blockquote p {
 }
 
 @media (min-width: 480px) {
-    #timeline .demo-card {
+    #timeline .time-card {
         max-width: 60%;
         box-shadow: 0px 1px 22px 4px rgba(0, 0, 0, 0.07);
     }
 }
 
 @media (min-width: 720px) {
-    #timeline .demo-card {
+    #timeline .time-card {
         max-width: 40%;
     }
 }
 
 @media (min-width: 1000px) {
-    #timeline .demo-card {
+    #timeline .time-card {
         max-width: 450px;
         height: auto;
         margin: 90px;
         margin-top: 45px;
         margin-bottom: 45px;
     }
-    #timeline .demo-card:nth-child(odd) {
+    #timeline .time-card:nth-child(odd) {
         margin-right: 45px;
     }
-    #timeline .demo-card:nth-child(odd) .head::after {
+    #timeline .time-card:nth-child(odd) .head::after {
         border-left-width: 15px;
         border-left-style: solid;
         left: 100%;
     }
-    #timeline .demo-card:nth-child(odd) .head::before {
+    #timeline .time-card:nth-child(odd) .head::before {
         left: 491.5px;
     }
-    #timeline .demo-card:nth-child(even) {
+    #timeline .time-card:nth-child(even) {
         margin-left: 45px;
     }
-    #timeline .demo-card:nth-child(even) .head::after {
+    #timeline .time-card:nth-child(even) .head::after {
         border-right-width: 15px;
         border-right-style: solid;
         right: 100%;
     }
-    #timeline .demo-card:nth-child(even) .head::before {
+    #timeline .time-card:nth-child(even) .head::before {
         right: 489.5px;
     }
-    #timeline .demo-card:nth-child(2) {
+    #timeline .time-card:nth-child(2) {
         margin-top: 180px;
     }
 
-    #timeline .demo-card:last-child {
+    #timeline .time-card:last-child {
         margin-bottom: 0;
     } 
 }
 
-#timeline .demo-card .head {
+#timeline .time-card .head {
     position: relative;
     display: flex;
     align-items: center;
@@ -399,7 +400,7 @@ blockquote p {
     font-weight: 400;
 }
 
-#timeline .demo-card .head .number-box {
+#timeline .time-card .head .number-box {
     display: inline;
     float: left;
     margin: 15px;
@@ -410,7 +411,7 @@ blockquote p {
     background: rgba(0, 0, 0, 0.17);
 }
 
-#timeline .demo-card .head h2 {
+#timeline .time-card .head h2 {
     text-transform: uppercase;
     font-size: 1.3rem;
     font-weight: inherit;
@@ -421,30 +422,30 @@ blockquote p {
 }
 
 @media (min-width: 480px) {
-    #timeline .demo-card .head h2 {
+    #timeline .time-card .head h2 {
         font-size: 165%;
         line-height: 1.2rem;
     }
 }
 
-#timeline .demo-card .head h2 span {
+#timeline .time-card .head h2 span {
     display: block;
     font-size: 0.6rem;
     margin: 0;
     margin-bottom: 5px;
 }
 
-#timeline .demo-card .head h2 a {
+#timeline .time-card .head h2 a {
     color: #fff;
 }
 
 @media (min-width: 480px) {
-    #timeline .demo-card .head h2 span {
+    #timeline .time-card .head h2 span {
         font-size: 0.8rem;
     }
 }
 
-#timeline .demo-card .body {
+#timeline .time-card .body {
     background: #fff;
     border: 1px solid rgba(191, 191, 191, 0.4);
     border-top: 0;
@@ -452,61 +453,61 @@ blockquote p {
 }
 
 @media (min-width: 1000px) {
-    #timeline .demo-card .body {
+    #timeline .time-card .body {
         height: auto;
     }
 }
 
-#timeline .demo-card .body p {
+#timeline .time-card .body p {
     font-size: 14px;
     line-height: 18px;
     margin-bottom: 15px;
 }
 
-#timeline .demo-card .body img {
+#timeline .time-card .body img {
     display: block;
     width: 100%;
 }
 
-#timeline .demo-card-step1 {
+#timeline .time-card-step1 {
     background-color: #03A9F4;;
 }
 
-#timeline .demo-card-step1 .head::after {
+#timeline .time-card-step1 .head::after {
     border-color: #03A9F4
 }
 
-#timeline .demo-card-step2 {
+#timeline .time-card-step2 {
     background-color: #ff5252;
 }
 
-#timeline .demo-card-step2 .head::after {
+#timeline .time-card-step2 .head::after {
     border-color:#ff5252;
 }
 
-#timeline .demo-card-step3 {
+#timeline .time-card-step3 {
     background-color: #FFC107;
 }
 
-#timeline .demo-card-step3 .head::after {
+#timeline .time-card-step3 .head::after {
     border-color: #FFC107;
 }
 
-#timeline .demo-card-step4 {
+#timeline .time-card-step4 {
     background-color: #1fb55b;
 }
 
-#timeline .demo-card-step4 .head::after {
+#timeline .time-card-step4 .head::after {
     border-color: #1fb55b;
 }
-
-#timeline .demo-card-step5 {
+/* 
+#timeline .time-card-step5 {
     background-color: #ff5252;
 }
 
-#timeline .demo-card-step5 .head::after {
+#timeline .time-card-step5 .head::after {
     border-color: #ff5252;
-}
+} */
 /* timeline */
 
 /* loading */

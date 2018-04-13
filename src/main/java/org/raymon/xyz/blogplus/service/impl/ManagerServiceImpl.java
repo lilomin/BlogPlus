@@ -56,6 +56,7 @@ public class ManagerServiceImpl implements ManagerService {
 				throw new BlogPlusException(ExceptionEnum.DATA_NOT_FOUND);
 			}
 			blog.setUpdateTime(new Date());
+			blog.setContent(Base64Utils.encodeToString(blog.getContent().getBytes()));
 			flag = managerDao.updateBlog(blog);
 		} else {
 			Blog db = getByBlogTitle(blog.getUserId(), blog.getTitle());
@@ -79,13 +80,23 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 	
 	@Override
-	public Page<Blog> getBlogList(String userId, int currentPage, int pageSize) {
-		int total = managerDao.countAll(userId);
+	public Page<Blog> getBlogList(String userId, int currentPage, int pageSize, boolean includeHidden) {
+		int total = 0;
+		if (includeHidden) {
+			total = managerDao.countAllIncludeHidden(userId);
+		} else {
+			total = managerDao.countAll(userId);
+		}
 		int offset = currentPage * pageSize - pageSize;
 		if (offset > total) {
 			return new Page<>();
 		}
-		List<Blog> dataList = managerDao.selectByPage(userId, pageSize, offset);
+		List<Blog> dataList = null;
+		if (includeHidden) {
+			dataList = managerDao.selectByPageIncludeHidden(userId, pageSize, offset);
+		} else {
+			dataList = managerDao.selectByPage(userId, pageSize, offset);
+		}
 		if (dataList != null && !dataList.isEmpty()) {
 			Iterator<Blog> it = dataList.iterator();
 			while (it.hasNext()) {
@@ -152,6 +163,18 @@ public class ManagerServiceImpl implements ManagerService {
 			String markdown = new String(Base64Utils.decodeFromString(blog.getContent()));
 			String content = MarkDownUtils.parseMarkDown2Html(markdown);
 			blog.setContent(content);
+		}
+		return blog;
+	}
+	
+	@Override
+	public Blog getByBlogIdMarkDown(String userId, String blogId) {
+		Blog blog = managerDao.selectByBlogId(userId, blogId);
+		if (blog != null) {
+			blog.setCreateDay(generateCreateDay(blog.getCreateTime()));
+			blog.setTags(generateBlogTags(blogTagDao.getTags(userId, blogId)));
+			String markdown = new String(Base64Utils.decodeFromString(blog.getContent()));
+			blog.setContent(markdown);
 		}
 		return blog;
 	}
