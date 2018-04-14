@@ -50,7 +50,7 @@ public class ManagerServiceImpl implements ManagerService {
 		int flag;
 		String userId = blog.getUserId();
 		String blogId = blog.getBlogId();
-		if (blogId != null) {
+		if (blogId != null && !blogId.trim().isEmpty()) {
 			Blog db = getByBlogId(userId, blogId);
 			if (db == null) {
 				throw new BlogPlusException(ExceptionEnum.DATA_NOT_FOUND);
