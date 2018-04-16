@@ -281,7 +281,7 @@ blockquote p {
 /*}*/
 
 #timeline {
-    padding: 100px 0;
+    padding: 50px 0;
     background: #f7f7f7;
     border-top: 1px solid rgba(191, 191, 191, 0.4);
     border-bottom: 1px solid rgba(191, 191, 191, 0.4);
@@ -355,7 +355,7 @@ blockquote p {
 
 @media (min-width: 1000px) {
     #timeline .time-card {
-        max-width: 450px;
+        width: 450px;
         height: auto;
         margin: 90px;
         margin-top: 45px;

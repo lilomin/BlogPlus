@@ -228,7 +228,7 @@ app.loadTimeline = function (data) {
     var list = data.list;
     var cardWrapper = '<div class="time-card-wrapper wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
     if (list.length <= 2) {
-        cardWrapper = '<div class="time-card-wrapper wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" style="height:420px;">';
+        cardWrapper = '<div class="time-card-wrapper wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" style="height:510px;">';
     }
     for (var index = 1; index <= list.length; index++) {
         var blog = data.list[index - 1];
