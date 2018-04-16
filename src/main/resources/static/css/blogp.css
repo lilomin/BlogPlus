@@ -437,6 +437,7 @@ blockquote p {
 
 #timeline .time-card .head h2 a {
     color: #fff;
+    line-height: 1;
 }
 
 @media (min-width: 480px) {
