@@ -11,6 +11,7 @@ import org.raymon.xyz.blogplus.dao.UserDao;
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.manager.Blog;
 import org.raymon.xyz.blogplus.model.manager.BlogTag;
+import org.raymon.xyz.blogplus.model.manager.CalendarCate;
 import org.raymon.xyz.blogplus.model.manager.TagChangeParam;
 import org.raymon.xyz.blogplus.model.user.User;
 import org.raymon.xyz.blogplus.service.ManagerService;
@@ -21,8 +22,8 @@ import org.thymeleaf.util.DateUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -80,23 +81,15 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 	
 	@Override
-	public Page<Blog> getBlogList(String userId, int currentPage, int pageSize, boolean includeHidden) {
+	public Page<Blog> getBlogList(String userId, int currentPage, int pageSize, boolean includeHidden, String filter) {
 		int total = 0;
-		if (includeHidden) {
-			total = managerDao.countAllIncludeHidden(userId);
-		} else {
-			total = managerDao.countAll(userId);
-		}
+		total = managerDao.countAll(userId, includeHidden, filter);
 		int offset = currentPage * pageSize - pageSize;
 		if (offset > total) {
 			return new Page<>();
 		}
 		List<Blog> dataList = null;
-		if (includeHidden) {
-			dataList = managerDao.selectByPageIncludeHidden(userId, pageSize, offset);
-		} else {
-			dataList = managerDao.selectByPage(userId, pageSize, offset);
-		}
+		dataList = managerDao.selectByPage(userId, pageSize, offset, includeHidden, filter);
 		if (dataList != null && !dataList.isEmpty()) {
 			Iterator<Blog> it = dataList.iterator();
 			while (it.hasNext()) {
@@ -111,7 +104,9 @@ public class ManagerServiceImpl implements ManagerService {
 				b.setTags(generateBlogTags(blogTagDao.getTags(userId, b.getBlogId())));
 			}
 		}
-		return new Page<>(total, currentPage, pageSize, dataList);
+		Page<Blog> page = new Page<>(total, currentPage, pageSize, dataList);
+		page.setFilter(filter);
+		return page;
 	}
 	
 	/**
@@ -228,4 +223,26 @@ public class ManagerServiceImpl implements ManagerService {
 		}
 		return count > 0;
 	}
+	
+	@Override
+	public List<CalendarCate> getBlogCalendarCate(String userId) {
+		List<CalendarCate> result = managerDao.groupByCreateMonth(userId);
+		if (result == null) {
+			return new ArrayList<>();
+		}
+		result.forEach(calendarCate -> {
+			// MM-YYYY
+			String date = calendarCate.getFilterValue();
+			if (date != null && date.contains("-")) {
+				String[] arr = date.split("-");
+				Calendar calendar = Calendar.getInstance();
+				calendar.set(Calendar.YEAR, Integer.valueOf(arr[1]));
+				calendar.set(Calendar.MONTH, Integer.valueOf(arr[0]) - 1);
+				String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CHINA);
+				calendarCate.setTitle(month + "  " + arr[1]);
+			}
+		});
+		return result;
+	}
+	
 }

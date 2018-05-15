@@ -21,13 +21,14 @@ app.loadHomeCard = function (data) {
     var cardDeck_2 = '<div class="card-deck wow fadeInUp">';
     for (var index = 1; index <= list.length; index++) {
         var blog = data.list[index - 1];
+        var tags = app.generateTags(blog.tags);
         
         var card = '<div class="card"><img class="card-img-top" src="' + blog.image + '" alt="Card image cap">' +
-                '<div class="card-body"><h5 class="card-title">' + blog.title + '</h5>' + 
+                '<div class="card-body"><h5 class="card-title">' + blog.title + '</h5>' + '<div class="card-tag">' + tags + '</div>' +
                 '<p class="card-text card-desc">' + blog.description + '</p>' + 
                 '<p class="card-text">' + 
                 '<small class="text-muted">' + blog.createDay + '</small><a href="post/' + blog.path + '" ' +
-                'style="float:right;">详情<span>>></span></a></p></div></div>';
+                'style="float:right;">详情<span></span></a></p></div></div>';
 
         if (index <= app.homeCardPageSize / 2) {
             cardDeck_1 += card;
@@ -51,9 +52,22 @@ app.loadHomeCard = function (data) {
         app.firstTimeInit = false;
         return;
     }
-    var jumpTO = $('#home-card').offset().top;
+    var jumpTO = $(homeCard).offset().top;
     $("html,body").animate({scrollTop:jumpTO},500);
-}
+};
+
+app.generateTags = function (tags) {
+    var tagPrefix = '<embed src="/images/svg/tag.svg" width="20" height="20" type="image/svg+xml"></embed>&nbsp;<small class="text-muted">';
+    var tagSuffix = '</small>';
+    if (tags.length <= 0) {
+        return '';
+    }
+    var str = "";
+    for(var t = 0; t < tags.length; t++) {
+        str += tagPrefix + tags[t] + tagSuffix + " ";
+    }
+    return str
+};
 
 app.generatePagination = function () {
     var items = [];
@@ -107,15 +121,21 @@ app.bindPagination = function () {
         }
         app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
     });
-}
+};
 
 app.getBlogListData = function (currentPage, pageSize, successFn) {
+    var search = window.location.search;
+    var filter = null;
+    if (search !== null && search.length > 0 && search.indexOf("=") !== -1) {
+        filter = search.substr(search.indexOf("=") + 1, search.length);
+    }
     $.ajax({
         type: "GET",
         url: "/api/v1/manager/list",
         data: {
             currentPage: currentPage,
-            pageSize: pageSize
+            pageSize: pageSize,
+            filter: filter
         },
         success: function (data, status) {
             if (data.success) {
@@ -221,7 +241,7 @@ app.initTimeLine = function() {
             app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline);
         }
     });
-}
+};
 
 app.loadTimeline = function (data) {
     app.totalPage = data.totalPage;
@@ -250,7 +270,7 @@ app.loadTimeline = function (data) {
             $('.timeline').append('<h1 class="timeline-end">没有啦~</h1>');
         }
     }
-}
+};
 
 app.blogSwitchClick = function () {
     $('[id=blogSwitch]').bind('click', function () {
@@ -351,22 +371,21 @@ app.initEditormd = function() {
     });
 };
 
-app.loading = function () {
-    var loadingHtml = '<div class="loader"><div class="loader-inner"><div class="loader-line-wrap"><div' +
-            ' class="loader-line"></div></div><div class="loader-line-wrap"><div class="loade' +
-            'r-line"></div></div><div class="loader-line-wrap"><div class="loader-line"></div' +
-            '></div><div class="loader-line-wrap"><div class="loader-line"></div></div><div c' +
-            'lass="loader-line-wrap"><div class="loader-line"></div></div></div>';
-
-    $('html').append(loadingHtml).fadeIn();
-}
+// app.loading = function () {
+//     var loadingHtml = '<div class="loader"><div class="loader-inner"><div class="loader-line-wrap"><div' +
+//             ' class="loader-line"></div></div><div class="loader-line-wrap"><div class="loade' +
+//             'r-line"></div></div><div class="loader-line-wrap"><div class="loader-line"></div' +
+//             '></div><div class="loader-line-wrap"><div class="loader-line"></div></div><div c' +
+//             'lass="loader-line-wrap"><div class="loader-line"></div></div></div>';
+//
+//     $('html').append(loadingHtml).fadeIn();
+// };
 
 app.removeLoading = function () {
     $('.loader').fadeOut();
-}
+};
 
 app.init = function() {
-    app.loading();
 
     app.blogEditClick();
     app.blogSwitchClick();

@@ -1,7 +1,11 @@
 package org.raymon.xyz.blogplus.service;
 
 import org.raymon.xyz.blogplus.model.file.FileVO;
+import org.raymon.xyz.blogplus.model.file.UploadParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -11,8 +15,8 @@ public interface FileService {
 	
 	List<FileVO> fileList(String path);
 	
-	boolean uploadFile();
+	String uploadBlogImg(MultipartFile multipartFile, String blogId);
 	
-	void downloadFile();
+	File downloadFile(String blogId, String fileName);
 	
 }

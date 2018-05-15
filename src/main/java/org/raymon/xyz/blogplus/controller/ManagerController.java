@@ -45,8 +45,9 @@ public class ManagerController {
 	@ResponseBody
 	public Result getBlogByPage(@RequestParam(value = "userId", defaultValue = CommonConstant.DEFAULT_USER) String userId,
 	                            @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
-	                            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-		Page page = managerService.getBlogList(userId, currentPage, pageSize, false);
+	                            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+	                            @RequestParam(value = "filter", required = false) String filter) {
+		Page page = managerService.getBlogList(userId, currentPage, pageSize, false, filter);
 		return ResultUtils.success(page);
 	}
 	

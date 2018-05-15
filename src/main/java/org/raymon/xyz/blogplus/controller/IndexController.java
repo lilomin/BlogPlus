@@ -7,9 +7,11 @@ import org.raymon.xyz.blogplus.common.result.ResultUtils;
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.file.FileVO;
 import org.raymon.xyz.blogplus.model.manager.Blog;
+import org.raymon.xyz.blogplus.model.manager.CalendarCate;
 import org.raymon.xyz.blogplus.model.user.User;
 import org.raymon.xyz.blogplus.service.FileService;
 import org.raymon.xyz.blogplus.service.ManagerService;
+import org.raymon.xyz.blogplus.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,8 @@ public class IndexController {
 	@Resource
 	private ManagerService managerService;
 	@Resource
+	private UserService userService;
+	@Resource
 	private FileService fileService;
 	
 	/**
@@ -51,8 +55,15 @@ public class IndexController {
 	 * 博客首页
 	 * @return
 	 */
-	@RequestMapping("/home")
-	public String toHome(Model model) {
+	@RequestMapping("/")
+	public String toHome(Model model, @RequestParam(value = "filter", required = false) String filter) {
+		User userInfo = userService.queryByUserId(CommonConstant.DEFAULT_USER);
+		List<CalendarCate> cateList = managerService.getBlogCalendarCate(CommonConstant.DEFAULT_USER);
+		model.addAttribute("user", userInfo);
+		model.addAttribute("cateList", cateList);
+		if (filter != null) {
+			model.addAttribute("filter", filter);
+		}
 		return "home";
 	}
 	
@@ -66,7 +77,7 @@ public class IndexController {
 	                             Model model) {
 		Blog result = managerService.getByBlogTitle(userId, CommonConstant.ABOUT_TITLE);
 		if (result == null) {
-			return toHome(model);
+			return toHome(model, null);
 		}
 		result.setTitle("关于我");
 		model.addAttribute("blog", result);
@@ -95,7 +106,7 @@ public class IndexController {
 		if (u == null) {
 			throw new BlogPlusException(ExceptionEnum.SERVER_ERROR);
 		}
-		Page data = managerService.getBlogList(u.getUserId(), page, 10, true);
+		Page data = managerService.getBlogList(u.getUserId(), page, 10, true, null);
 		model.addAttribute("page", data);
 		return "management";
 	}
@@ -112,7 +123,7 @@ public class IndexController {
 	                       @PathVariable("title") String title, Model model, HttpSession session) {
 		Blog result = managerService.getByBlogTitle(userId, title);
 		if (result == null) {
-			return toHome(model);
+			return toHome(model, null);
 		}
 		model.addAttribute("blog", result);
 		return "post";

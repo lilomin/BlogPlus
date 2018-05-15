@@ -27,7 +27,7 @@ public interface UserDao {
 	})
 	User selectByUsername(String username);
 	
-	@Select("SELECT user_id, username, password, avatar, email, nickname, create_time, update_time FROM blog_user WHERE user_id = #{userId}")
+	@Select("SELECT user_id, username, password, avatar, email, nickname, sign, create_time, update_time FROM blog_user WHERE user_id = #{userId}")
 	@Results({
 			@Result(property = "userId", column = "user_id"),
 			@Result(property = "username", column = "username"),

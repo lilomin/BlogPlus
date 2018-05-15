@@ -14,6 +14,7 @@ public class Page<T> implements Serializable {
 	private int totalPage;
 	private int currentPage;
 	private int pageSize;
+	private String filter;
 	private List<T> list;
 	
 	public Page(int total, int currentPage, int pageSize, List<T> list) {
@@ -58,6 +59,17 @@ public class Page<T> implements Serializable {
 	
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
+	}
+	
+	public String getFilter() {
+		return filter;
+	}
+	
+	public void setFilter(String filter) {
+		if (filter == null) {
+			this.filter = "";
+		}
+		this.filter = filter;
 	}
 	
 	public List<T> getList() {

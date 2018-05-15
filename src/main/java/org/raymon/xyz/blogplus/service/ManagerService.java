@@ -2,9 +2,11 @@ package org.raymon.xyz.blogplus.service;
 
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.manager.Blog;
+import org.raymon.xyz.blogplus.model.manager.CalendarCate;
 import org.raymon.xyz.blogplus.model.manager.TagChangeParam;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lilm on 18-3-15.
@@ -25,7 +27,7 @@ public interface ManagerService {
 	 * @param pageSize
 	 * @return
 	 */
-	Page<Blog> getBlogList(String userId, int currentPage, int pageSize, boolean includeHidden);
+	Page<Blog> getBlogList(String userId, int currentPage, int pageSize, boolean includeHidden, String filter);
 	
 	/**
 	 * 根据博客id查询
@@ -66,4 +68,10 @@ public interface ManagerService {
 	 */
 	boolean blogTagChange(TagChangeParam param);
 	
+	/**
+	 * 获取博客日志组
+	 * @param userId
+	 * @return
+	 */
+	List<CalendarCate> getBlogCalendarCate(String userId);
 }
