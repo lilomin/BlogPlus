@@ -114,14 +114,14 @@ public class IndexController {
 	/**
 	 * 博客展示页面
 	 * @param userId
-	 * @param title
+	 * @param blogId
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/post/{year}/{month}/{day}/{title}", method = RequestMethod.GET)
+	@RequestMapping(value = "/post/{year}/{month}/{day}/{blogId}", method = RequestMethod.GET)
 	public String blogPost(@RequestParam(value = "userId", defaultValue = CommonConstant.DEFAULT_USER) String userId,
-	                       @PathVariable("title") String title, Model model, HttpSession session) {
-		Blog result = managerService.getByBlogTitle(userId, title);
+	                       @PathVariable("blogId") String blogId, Model model, HttpSession session) {
+		Blog result = managerService.getByBlogId(userId, blogId);
 		if (result == null) {
 			return toHome(model, null);
 		}
