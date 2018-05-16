@@ -436,7 +436,7 @@ app.init = function() {
 $(function () {
     app.init();
 
-    setTimeout("app.removeLoading()", 500);
+    setTimeout("app.removeLoading()", 1000);
 
     new WOW().init();
 });
