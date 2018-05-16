@@ -24,7 +24,7 @@ app.loadHomeCard = function (data) {
         var tags = app.generateTags(blog.tags);
         
         var card = '<div class="card"><img class="card-img-top" src="/api/v1/file/' + blog.image + '" alt="Card image cap">' +
-                '<div class="card-body"><a href="post' + blog.path + '"><h5 class="card-title">' + blog.title + '</h5></a>' +
+                '<div class="card-body"><a href="post/' + blog.path + '"><h5 class="card-title">' + blog.title + '</h5></a>' +
                 '<div class="card-tag">' + tags + '</div>' +
                 '<p class="card-text card-desc">' + blog.description + '</p>' + 
                 '<p class="card-text">' + 

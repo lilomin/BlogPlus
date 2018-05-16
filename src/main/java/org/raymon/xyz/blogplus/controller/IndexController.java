@@ -115,18 +115,18 @@ public class IndexController {
 	/**
 	 * 博客展示页面
 	 * @param userId
-	 * @param blogId
+	 * @param title
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/post/{year}/{month}/{day}/{blogId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/post/{title}", method = RequestMethod.GET)
 	public String blogPost(@RequestParam(value = "userId", defaultValue = CommonConstant.DEFAULT_USER) String userId,
-	                       @PathVariable("blogId") String blogId, Model model, HttpSession session) {
-		if (blogId == null) {
+	                       @PathVariable("title") String title, Model model, HttpSession session) {
+		if (title == null) {
 			return "home";
 		}
-		blogId = new String(Base64Utils.decodeFromString(blogId));
-		Blog result = managerService.getByBlogId(userId, blogId);
+		title = new String(Base64Utils.decodeFromString(title));
+		Blog result = managerService.getByBlogTitle(userId, title);
 		if (result == null) {
 			return toHome(model, null);
 		}

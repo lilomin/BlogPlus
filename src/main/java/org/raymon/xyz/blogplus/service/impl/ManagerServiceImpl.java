@@ -36,8 +36,6 @@ import java.util.stream.Collectors;
 @Service
 public class ManagerServiceImpl implements ManagerService {
 	
-	private static final String PATH_CONNECTOR = "/";
-	
 	@Resource
 	private ManagerDao managerDao;
 	@Resource
@@ -120,15 +118,9 @@ public class ManagerServiceImpl implements ManagerService {
 	private String generateBlogPath(Blog blog) {
 		if (blog != null) {
 			StringBuilder sb = new StringBuilder();
-			Date createTime = blog.getCreateTime();
-			Integer year = DateUtils.year(createTime);
-			Integer month = DateUtils.month(createTime);
-			Integer day = DateUtils.day(createTime);
 			
-			String idEncode = Base64Utils.encodeToString(blog.getBlogId().getBytes());
-			sb.append(year).append(PATH_CONNECTOR)
-					.append(month).append(PATH_CONNECTOR)
-					.append(day).append(PATH_CONNECTOR).append(idEncode);
+			String titleEncode = Base64Utils.encodeToString(blog.getTitle().getBytes());
+			sb.append(titleEncode);
 			return sb.toString();
 		}
 		return null;
