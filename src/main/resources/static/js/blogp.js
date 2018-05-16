@@ -17,8 +17,8 @@ app.loadHomeCard = function (data) {
     app.totalPage = data.totalPage;
     var list = data.list;
     
-    var cardDeck_1 = '<div class="card-deck wow fadeInUp">';
-    var cardDeck_2 = '<div class="card-deck wow fadeInUp">';
+    var cardDeck_1 = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
+    var cardDeck_2 = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
     for (var index = 1; index <= list.length; index++) {
         var blog = data.list[index - 1];
         var tags = app.generateTags(blog.tags);
@@ -405,16 +405,6 @@ app.initEditormd = function() {
         });
     });
 };
-
-// app.loading = function () {
-//     var loadingHtml = '<div class="loader"><div class="loader-inner"><div class="loader-line-wrap"><div' +
-//             ' class="loader-line"></div></div><div class="loader-line-wrap"><div class="loade' +
-//             'r-line"></div></div><div class="loader-line-wrap"><div class="loader-line"></div' +
-//             '></div><div class="loader-line-wrap"><div class="loader-line"></div></div><div c' +
-//             'lass="loader-line-wrap"><div class="loader-line"></div></div></div>';
-//
-//     $('html').append(loadingHtml).fadeIn();
-// };
 
 app.removeLoading = function () {
     $('.loader').fadeOut();

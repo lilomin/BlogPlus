@@ -4,7 +4,7 @@
 <head th:include="fragments/layout :: htmlhead" th:with="title='test'"></head>
 
 <body>
-
+    <div th:replace="fragments/layout :: loading"></div>
     <div th:replace="fragments/layout :: header"></div>
 
     <div th:if="${session.user != null}">

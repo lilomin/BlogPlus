@@ -30,27 +30,6 @@
 </head>
 
 <header id="header" class="header wow" th:fragment="header">
-    <div class="loader">
-        <div class="loader-inner">
-            <div class="loader-line-wrap">
-                <div class="loader-line"></div>
-            </div>
-            <div class="loader-line-wrap">
-                <div class="loader-line"></div>
-            </div>
-            <div class="loader-line-wrap">
-                <div class="loader-line"></div>
-            </div>
-            <div class="loader-line-wrap">
-                <div class="loader-line"></div>
-            </div>
-
-            <div class="loader-line-wrap">
-                <div class="loader-line"></div>
-            </div>
-        </div>
-    </div>
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark my-nav">
         <div class="container">
             <div class="border-logo"></div>
@@ -146,6 +125,27 @@
     </div>
 
 </header>
+
+<div class="loader" th:fragment="loading">
+    <div class="loader-inner">
+        <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+        </div>
+        <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+        </div>
+        <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+        </div>
+        <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+        </div>
+
+        <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+        </div>
+    </div>
+</div>
 
 <div th:fragment="header-cover" class="header-cover justify-content-center">
     <div style="text-align: center;
