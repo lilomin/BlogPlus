@@ -47,10 +47,12 @@ public class FileController {
 	@ResponseBody
 	public Result download(@PathVariable("blog") String blog, @PathVariable("filename") String filename, ServletResponse response) {
 		try {
-			// response.addHeader("Content-Disposition", "attachment;fileName=" + filename);// 设置文件名
 			OutputStream os = response.getOutputStream();
 			
 			File file = fileService.downloadFile(blog, filename);
+			if (!file.exists()) {
+				return ResultUtils.success("");
+			}
 			// 将文件流输出
 			ImgUtils.getImg(file, os);
 			response.setContentType("image/png");
