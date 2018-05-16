@@ -29,8 +29,8 @@ public interface ManagerDao {
 	int createBlog(Blog blog);
 	
 	@Update(
-			"update blog set title = #{title}, content = #{content}, description = #{description}, update_time = #{updateTime}" +
-					"where blog_id = #{blogId} and user_id = #{userId}"
+			"update blog set title = #{title}, content = #{content}, description = #{description}, update_time = #{updateTime}, image = #{image} " +
+					" where blog_id = #{blogId} and user_id = #{userId}"
 	)
 	int updateBlog(Blog blog);
 	
@@ -46,10 +46,10 @@ public interface ManagerDao {
 			@Result(property = "updateTime", column = "update_time")
 	})
 	List<Blog> selectByPage(@Param("userId") String userId, @Param("limit") int limit, @Param("offset") int offset,
-	                        @Param("hidden") boolean hidden, @Param("createMonth") String createMonth);
+	                        @Param("includeHidden") boolean includeHidden, @Param("createMonth") String createMonth);
 	
 	@SelectProvider(type = BlogProvider.class, method = "getCountByFilter")
-	int countAll(@Param("userId") String userId, @Param("hidden") boolean hidden, @Param("createMonth") String createMonth);
+	int countAll(@Param("userId") String userId, @Param("includeHidden") boolean includeHidden, @Param("createMonth") String createMonth);
 	
 	@Select(
 			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog " +
@@ -73,7 +73,8 @@ public interface ManagerDao {
 	                     @Param("hidden") boolean hidden, @Param("updateTime") Date updateTime);
 	
 	@Select(
-			"select count(1) as blog_count, create_month from (select blog_id, DATE_FORMAT(create_time, '%m-%Y') as create_month from blog where user_id = #{userId}) as temp group by create_month order by create_month desc"
+			"select count(1) as blog_count, create_month from (select blog_id, DATE_FORMAT(create_time, '%m-%Y') as create_month from blog " +
+					"where user_id = #{userId} and hidden = 0 ) as temp group by create_month order by create_month desc"
 	)
 	@Results({
 			@Result(property = "filterValue", column = "create_month"),
@@ -111,14 +112,13 @@ public interface ManagerDao {
 		}
 		
 		private void generate(Map<String, Object> params, StringBuilder sql) {
-			Object hiddenParam = params.get("hidden");
+			Object hiddenParam = params.get("includeHidden");
 			Object createMonthParam = params.get("createMonth");
 			
 			sql.append("user_id = '").append(params.get("userId")).append("'");
-			if (hiddenParam != null) {
-				sql.append(" and hidden = ").append(hiddenParam);
-			} else {
-				sql.append(" and hidden = ").append("0");
+			if (hiddenParam != null && !(Boolean) hiddenParam) {
+				// 不包含隐藏博客
+				sql.append(" and hidden = false");
 			}
 			
 			if (createMonthParam != null && !createMonthParam.toString().trim().isEmpty()) {

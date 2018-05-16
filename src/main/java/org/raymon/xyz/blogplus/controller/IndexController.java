@@ -58,9 +58,9 @@ public class IndexController {
 	@RequestMapping("/")
 	public String toHome(Model model, @RequestParam(value = "filter", required = false) String filter) {
 		User userInfo = userService.queryByUserId(CommonConstant.DEFAULT_USER);
-		List<CalendarCate> cateList = managerService.getBlogCalendarCate(CommonConstant.DEFAULT_USER);
+		// List<CalendarCate> cateList = managerService.getBlogCalendarCate(CommonConstant.DEFAULT_USER);
 		model.addAttribute("user", userInfo);
-		model.addAttribute("cateList", cateList);
+		// model.addAttribute("cateList", cateList);
 		if (filter != null) {
 			model.addAttribute("filter", filter);
 		}

@@ -23,7 +23,7 @@ app.loadHomeCard = function (data) {
         var blog = data.list[index - 1];
         var tags = app.generateTags(blog.tags);
         
-        var card = '<div class="card"><img class="card-img-top" src="' + blog.image + '" alt="Card image cap">' +
+        var card = '<div class="card"><img class="card-img-top" src="/api/v1/file/' + blog.image + '" alt="Card image cap">' +
                 '<div class="card-body"><h5 class="card-title">' + blog.title + '</h5>' + '<div class="card-tag">' + tags + '</div>' +
                 '<p class="card-text card-desc">' + blog.description + '</p>' + 
                 '<p class="card-text">' + 
@@ -193,11 +193,44 @@ app.blogPreview = function () {
     });
 };
 
+app.uploadImage = function (blogId, file) {
+    if (blogId === null || file === null || file === undefined) {
+        return null;
+    }
+    var image = null;
+    var formData = new FormData();
+    formData.append('file', file);
+    $.ajax({
+        type: "PUT",
+        url: "/api/v1/file/upload?blogId=" + blogId,
+        data: formData,
+        dataType:"json",
+        async: false,
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (data, status) {
+            if (data.success) {
+                image = data.data;
+            }
+        }
+    });
+    return image;
+};
+
 app.blogSubmitClick = function () {
     $('#blogSubmit').bind('click', function () {
+        var blogId = $('#blogId').length > 0 ? $('#blogId').val() : null;
+        var fileObj = $('#blog-image').prop('files');
+        var image = null;
+        if (fileObj.length > 0) {
+            image = app.uploadImage(blogId, fileObj[0]);
+            image = blogId + '/' + image;
+        }
         $.ajax({
             type: "POST",
             url: "/api/v1/manager/save",
+            async: false,
             datatype: "json",
             contentType: "application/json",
             data: JSON.stringify({
@@ -206,7 +239,8 @@ app.blogSubmitClick = function () {
                 content: $('#editormd').val(),
                 userId: $('#userId').val(),
                 tags: $('#blog-tags').val().split(","),
-                blogId: $('#blogId').length > 0 ? $('#blogId').val() : null
+                image: image,
+                blogId: blogId
             }),
             success: function (data, status) {
                 if (data.success) {

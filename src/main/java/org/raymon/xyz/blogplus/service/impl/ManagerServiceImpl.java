@@ -58,6 +58,9 @@ public class ManagerServiceImpl implements ManagerService {
 			}
 			blog.setUpdateTime(new Date());
 			blog.setContent(Base64Utils.encodeToString(blog.getContent().getBytes()));
+			if (blog.getImage() == null || blog.getImage().isEmpty()) {
+				blog.setImage(db.getImage());
+			}
 			flag = managerDao.updateBlog(blog);
 		} else {
 			Blog db = getByBlogTitle(blog.getUserId(), blog.getTitle());
@@ -73,9 +76,9 @@ public class ManagerServiceImpl implements ManagerService {
 			blogId = UUIDUtils.createUUID();
 			blog.setBlogId(blogId);
 			flag = managerDao.createBlog(blog);
-			if (flag > 0 && blog.getTags() != null && blog.getTags().size() > 0 ) {
-				blogTagChange(new TagChangeParam(userId, blogId, blog.getTags()));
-			}
+		}
+		if (flag > 0 && blog.getTags() != null && blog.getTags().size() > 0 ) {
+			blogTagChange(new TagChangeParam(userId, blogId, blog.getTags()));
 		}
 		return flag > 0;
 	}
@@ -209,12 +212,15 @@ public class ManagerServiceImpl implements ManagerService {
 		}
 		List<String> tags = param.getTags();
 		if (tags == null || tags.isEmpty()) {
+			blogTagDao.deleteByBlogId(param.getUserId(), param.getBlogId());
 			return true;
 		}
 		Set<String> tagSet = tags.stream()
 				.filter(tag -> tag != null && tag.trim().length() > 0)
 				.collect(Collectors.toSet());
 		int count = 0;
+		blogTagDao.deleteByBlogId(param.getUserId(), param.getBlogId());
+		
 		for (String tag : tagSet) {
 			BlogTag blogTag = new BlogTag(param.getBlogId(), param.getUserId(), tag);
 			blogTag.setCreateTime(new Date());

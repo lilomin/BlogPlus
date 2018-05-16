@@ -1,5 +1,6 @@
 package org.raymon.xyz.blogplus.dao;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -32,5 +33,10 @@ public interface BlogTagDao {
 			@Result(property = "createTime", column = "create_time")
 	})
 	List<BlogTag> getTags(@Param("userId") String userId, @Param("blogId") String blogId);
+	
+	@Delete(
+			"delete from blog_tag where user_id = #{userId} and blog_id = #{blogId}"
+	)
+	int deleteByBlogId(@Param("userId") String userId, @Param("blogId") String blogId);
 	
 }
