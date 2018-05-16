@@ -302,7 +302,7 @@ app.loadTimeline = function (data) {
 
     if (data.currentPage >= app.totalPage) {
         if ($('.timeline .timeline-end').length <= 0) {
-            $('.timeline').append('<h1 class="timeline-end">没有啦~</h1>');
+            $('.timeline').append('<h3 class="timeline-end">&lt;完&gt;</h3>');
         }
     }
 };
