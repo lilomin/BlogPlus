@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -121,6 +122,10 @@ public class IndexController {
 	@RequestMapping(value = "/post/{year}/{month}/{day}/{blogId}", method = RequestMethod.GET)
 	public String blogPost(@RequestParam(value = "userId", defaultValue = CommonConstant.DEFAULT_USER) String userId,
 	                       @PathVariable("blogId") String blogId, Model model, HttpSession session) {
+		if (blogId == null) {
+			return "home";
+		}
+		blogId = new String(Base64Utils.decodeFromString(blogId));
 		Blog result = managerService.getByBlogId(userId, blogId);
 		if (result == null) {
 			return toHome(model, null);

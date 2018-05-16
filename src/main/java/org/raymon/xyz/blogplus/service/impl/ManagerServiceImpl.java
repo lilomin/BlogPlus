@@ -125,9 +125,11 @@ public class ManagerServiceImpl implements ManagerService {
 			Integer month = DateUtils.month(createTime);
 			Integer day = DateUtils.day(createTime);
 			
-			return sb.append(year).append(PATH_CONNECTOR)
+			String idEncode = Base64Utils.encodeToString(blog.getBlogId().getBytes());
+			sb.append(year).append(PATH_CONNECTOR)
 					.append(month).append(PATH_CONNECTOR)
-					.append(day).append(PATH_CONNECTOR).append(blog.getTitle()).toString();
+					.append(day).append(PATH_CONNECTOR).append(idEncode);
+			return sb.toString();
 		}
 		return null;
 	}
