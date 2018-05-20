@@ -65,8 +65,13 @@
 <script type="text/javascript" src="/plugin/editormd/editormd.min.js"></script>
 <script th:inline="javascript">
    $('#blog-tags').tagsInput();
-   var tags = /*[[${blog.tags}]]*/ '';
-   for (var t = 0; t < tags.length; t++) {
-       $('#blog-tags').addTag(tags[t]);
+   var blog = /*[[${blog}]]*/'';
+   if (blog !== null && blog !== undefined) {
+       var tags = blog.tags;
+       if (tags !== null && tags.length > 0) {
+           for (var t = 0; t < tags.length; t++) {
+               $('#blog-tags').addTag(tags[t]);
+           }
+       }
    }
 </script>
