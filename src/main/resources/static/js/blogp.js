@@ -133,6 +133,7 @@ app.getBlogListData = function (currentPage, pageSize, successFn) {
     $.ajax({
         type: "GET",
         url: "/api/v1/manager/list",
+        async: false,
         data: {
             currentPage: currentPage,
             pageSize: pageSize,
