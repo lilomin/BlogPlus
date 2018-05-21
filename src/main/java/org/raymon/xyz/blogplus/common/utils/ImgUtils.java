@@ -30,7 +30,7 @@ public class ImgUtils {
 			}
 		}
 		FileInputStream fileInputStream = (FileInputStream) multipartFile.getInputStream();
-		String fileName = UUIDUtils.createUUID() + ".png";
+		String fileName = multipartFile.getOriginalFilename();
 		path = path + File.separator + fileName;
 		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path));
 		try {
