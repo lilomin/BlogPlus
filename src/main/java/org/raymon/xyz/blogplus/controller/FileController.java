@@ -66,7 +66,8 @@ public class FileController {
 	
 	@PutMapping("upload")
 	@ResponseBody
-	public Result uploadImg(@RequestParam("file") MultipartFile multipartFile, @RequestParam("blogId") String blogId)  {
+	public Result uploadImg(@RequestParam("file") MultipartFile multipartFile,
+	                        @RequestParam("blogId") String blogId, @RequestParam(value = "compress", defaultValue = "true") boolean compress)  {
 		if (multipartFile == null || multipartFile.isEmpty() || multipartFile.getOriginalFilename() == null) {
 			throw new BlogPlusException(ExceptionEnum.PARAMS_EMPTY);
 		}
@@ -75,7 +76,7 @@ public class FileController {
 			throw new BlogPlusException(ExceptionEnum.PARAMS_EMPTY);
 		}
 		
-		String filename = fileService.uploadBlogImg(multipartFile, blogId);
+		String filename = fileService.uploadBlogImg(multipartFile, blogId, compress);
 		if (filename != null) {
 			return ResultUtils.success(filename);
 		} else {

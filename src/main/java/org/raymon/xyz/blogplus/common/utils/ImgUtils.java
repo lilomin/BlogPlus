@@ -21,7 +21,7 @@ public class ImgUtils {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ImgUtils.class);
 	
-	public static String saveImg(MultipartFile multipartFile, String path) throws IOException {
+	public static String saveImg(MultipartFile multipartFile, String path, boolean compress) throws IOException {
 		File file = new File(path);
 		if (!file.exists()) {
 			boolean flag = file.mkdirs();
@@ -34,9 +34,15 @@ public class ImgUtils {
 		path = path + File.separator + fileName;
 		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path));
 		try {
-			Thumbnails.of(fileInputStream)
-					.size(640, 480)
-					.toOutputStream(bos);
+			if (compress) {
+				Thumbnails.of(fileInputStream)
+						.size(640, 480)
+						.toOutputStream(bos);
+			} else {
+				Thumbnails.of(fileInputStream)
+						.size(1000, 800)
+						.toOutputStream(bos);
+			}
 		} catch (IOException e) {
 			logger.error("Create image Thumbnail failed：", e);
 		}

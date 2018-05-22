@@ -68,14 +68,14 @@ public class FileServiceImpl implements FileService {
 	}
 	
 	@Override
-	public String uploadBlogImg(MultipartFile multipartFile, String blogId) {
+	public String uploadBlogImg(MultipartFile multipartFile, String blogId, boolean compress) {
 		String contentType = multipartFile.getContentType();
 		String fileName = multipartFile.getOriginalFilename();
 		logger.info("上传图片:name={},type={}", fileName, contentType);
 		String filePath = fileRoot + File.separator + blogId;
 		logger.info("图片保存路径={}", filePath);
 		try {
-			String fileUuidName = ImgUtils.saveImg(multipartFile, filePath);
+			String fileUuidName = ImgUtils.saveImg(multipartFile, filePath, compress);
 			if (fileUuidName == null) {
 				logger.warn("upload blog img:{} failed!", filePath);
 			}

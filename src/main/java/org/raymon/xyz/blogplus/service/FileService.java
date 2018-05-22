@@ -15,7 +15,7 @@ public interface FileService {
 	
 	List<FileVO> fileList(String path);
 	
-	String uploadBlogImg(MultipartFile multipartFile, String blogId);
+	String uploadBlogImg(MultipartFile multipartFile, String blogId, boolean compress);
 	
 	File downloadFile(String blogId, String fileName);
 	
