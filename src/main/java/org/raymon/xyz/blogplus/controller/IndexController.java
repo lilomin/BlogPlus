@@ -125,7 +125,7 @@ public class IndexController {
 		if (title == null) {
 			return "home";
 		}
-		title = new String(Base64Utils.decodeFromString(title));
+		title = new String(Base64Utils.decodeFromUrlSafeString(title));
 		Blog result = managerService.getByBlogTitle(userId, title);
 		if (result == null) {
 			return toHome(model, null);
