@@ -117,11 +117,7 @@ public class ManagerServiceImpl implements ManagerService {
 	 */
 	private String generateBlogPath(Blog blog) {
 		if (blog != null) {
-			StringBuilder sb = new StringBuilder();
-			
-			String titleEncode = Base64Utils.encodeToUrlSafeString(blog.getTitle().getBytes());
-			sb.append(titleEncode);
-			return sb.toString();
+			return blog.getBlogId();
 		}
 		return null;
 	}
