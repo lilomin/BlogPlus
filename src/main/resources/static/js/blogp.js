@@ -24,11 +24,11 @@ app.loadHomeCard = function (data) {
         var tags = app.generateTags(blog.tags);
         
         var card = '<div class="card"><img class="card-img-top" src="/api/v1/file/' + blog.image + '" alt="Card image cap">' +
-                '<div class="card-body"><a href="post/' + blog.path + '"><h5 class="card-title">' + blog.title + '</h5></a>' +
+                '<div class="card-body"><a href="/post/' + blog.path + '"><h5 class="card-title">' + blog.title + '</h5></a>' +
                 '<div class="card-tag">' + tags + '</div>' +
                 '<p class="card-text card-desc">' + blog.description + '</p>' + 
                 '<p class="card-text">' + 
-                '<small class="text-muted">' + blog.createDay + '</small><a href="post/' + blog.path + '" ' +
+                '<small class="text-muted">' + blog.createDay + '</small><a href="/post/' + blog.path + '" ' +
                 'style="float:right;">详情<span></span></a></p></div></div>';
 
         if (index <= app.homeCardPageSize / 2) {
@@ -119,6 +119,9 @@ app.bindPagination = function () {
             app.currentPage--;
         } else {
             app.currentPage = page;
+            // update browser url
+            var originUrl = window.location.origin;
+            window.history.pushState({}, 0, originUrl + '/page/' + page);
         }
         app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
     });
@@ -412,6 +415,23 @@ app.removeLoading = function () {
 };
 
 app.init = function() {
+    var pathname = window.location.pathname;
+    if (pathname === null || pathname === undefined || pathname === '/') {
+        $('#nav-home').addClass("active");
+    } else
+    if (pathname.indexOf('about') !== -1) {
+        $('#nav-aboutme').addClass("active");
+    } else if (pathname.indexOf('timeline') !== -1) {
+        $('#nav-timeline').addClass("active");
+    } else if (pathname.indexOf('management') !== -1) {
+        $('#nav-manageDropdown').addClass("active");
+    } else {
+        var path = pathname.substr(pathname.lastIndexOf('/') + 1, pathname.length);
+        if (!isNaN(path) && path !== null && path !== '') {
+            app.currentPage = parseInt(path);
+            $('#nav-home').addClass("active");
+        }
+    }
 
     app.blogEditClick();
     app.blogSwitchClick();

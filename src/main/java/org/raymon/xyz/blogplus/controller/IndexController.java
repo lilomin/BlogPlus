@@ -58,6 +58,20 @@ public class IndexController {
 	 */
 	@RequestMapping("/")
 	public String toHome(Model model, @RequestParam(value = "filter", required = false) String filter) {
+		return homePage(model, null, filter);
+	}
+	
+	/**
+	 * 博客首页
+	 * @return
+	 */
+	@RequestMapping("/page/{page}")
+	public String toHomePage(Model model, @PathVariable(value = "page", required = false) String page,
+	                     @RequestParam(value = "filter", required = false) String filter) {
+		return homePage(model, page, filter);
+	}
+	
+	private String homePage(Model model, String page, String filter) {
 		User userInfo = userService.queryByUserId(CommonConstant.DEFAULT_USER);
 		// List<CalendarCate> cateList = managerService.getBlogCalendarCate(CommonConstant.DEFAULT_USER);
 		model.addAttribute("user", userInfo);
@@ -68,9 +82,15 @@ public class IndexController {
 		return "home";
 	}
 	
-	@RequestMapping("/achieve")
-	public String toAchieve(Model model) {
-		return "achieve";
+	// 待丰富
+	// @RequestMapping("/achieve")
+	// public String toAchieve(Model model) {
+	// 	return "achieve";
+	// }
+	
+	@RequestMapping("/timeline")
+	public String toTimeline(Model model) {
+		return "timeline";
 	}
 	
 	@RequestMapping("/about")
@@ -78,7 +98,7 @@ public class IndexController {
 	                             Model model) {
 		Blog result = managerService.getByBlogTitle(userId, CommonConstant.ABOUT_TITLE);
 		if (result == null) {
-			return toHome(model, null);
+			return homePage(model, null, null);
 		}
 		result.setTitle("关于我");
 		model.addAttribute("blog", result);
@@ -90,7 +110,7 @@ public class IndexController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/edit_post")
+	@RequestMapping("/management/edit_post")
 	public String newPost(Model model, @RequestParam(value = "blogId",required = false) String blogId, HttpSession session) {
 		User u = (User) session.getAttribute(CommonConstant.SESSION_KEY);
 		if (u != null && blogId != null && blogId.length() > 0) {
@@ -127,7 +147,7 @@ public class IndexController {
 		}
 		Blog result = managerService.getByBlogId(userId, blogId);
 		if (result == null) {
-			return toHome(model, null);
+			return homePage(model, null, null);
 		}
 		model.addAttribute("blog", result);
 		return "post";

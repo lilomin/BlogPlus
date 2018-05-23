@@ -55,14 +55,14 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">首页
+                        <a id="nav-home" class="nav-link" href="/">首页
                             <!--<span class="sr-only">(current)</span>-->
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/achieve">时间轴</a>
+                    <li id="nav-timeline" class="nav-item">
+                        <a class="nav-link" href="/timeline">时间轴</a>
                     </li>
-                    <li class="nav-item">
+                    <li id="nav-aboutme" class="nav-item">
                         <a class="nav-link" href="/about">关于</a>
                     </li>
                     <span th:if="${session.user eq null}">
@@ -72,11 +72,11 @@
                             </button>
                         </li> -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" 
-                               id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#"
+                               id="nav-manageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                管理
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <div class="dropdown-menu" aria-labelledby="nav-manageDropdown">
                                 <a class="dropdown-item login-btn" data-toggle="modal" data-target="#loginModal">登录</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/edit_post">新的博客</a>
@@ -86,12 +86,12 @@
                     <span th:if="${session.user ne null}">
                         <li class="nav-item dropdown">
                             <a th:text="${session.user.username}" class="nav-link dropdown-toggle" href="#" 
-                               id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               id="nav-manageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <div class="dropdown-menu" aria-labelledby="nav-manageDropdown">
                                 <a class="dropdown-item" href="/management/1">博客管理</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/edit_post">新的博客</a>
+                                <a class="dropdown-item" href="/management/edit_post">新的博客</a>
                             </div>
                         </li>
                     </span>
