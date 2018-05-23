@@ -10,7 +10,7 @@ app.homeCardPageSize = 6;
 app.firstTimeInit = true;
 
 app.initBlogCardList = function() {
-    app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
+    app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard, true);
 };
 
 app.loadHomeCard = function (data) {
@@ -123,11 +123,11 @@ app.bindPagination = function () {
             var originUrl = window.location.origin;
             window.history.pushState({}, 0, originUrl + '/page/' + page);
         }
-        app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
+        app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard, true);
     });
 };
 
-app.getBlogListData = function (currentPage, pageSize, successFn) {
+app.getBlogListData = function (currentPage, pageSize, successFn, isAsync) {
     var search = window.location.search;
     var filter = null;
     if (search !== null && search.length > 0 && search.indexOf("=") !== -1) {
@@ -136,7 +136,7 @@ app.getBlogListData = function (currentPage, pageSize, successFn) {
     $.ajax({
         type: "GET",
         url: "/api/v1/manager/list",
-        async: false,
+        async: isAsync,
         data: {
             currentPage: currentPage,
             pageSize: pageSize,
@@ -157,7 +157,6 @@ app.loginBtnDisplay = function () {
     $('.navbar').bind('click', function () {
         setTimeout(app.cleanClickTimes, 5000);
         app.clickTimes = parseInt(app.clickTimes) + 1;
-        console.log(app.clickTimes);
         if (app.clickTimes === 5) {
             $('.login-btn').fadeIn('slow');
         }
@@ -263,7 +262,7 @@ app.scrollBefore = 0;
 app.initTimeLine = function() {
     var load = false;
 
-    app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline);
+    app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline, false);
     $(window).bind('scroll', function () {
         var windowTop = $(window).scrollTop();
         var lastTop = $(".time-card-wrapper:last").children(".time-card:last-child").offset().top;
@@ -276,8 +275,7 @@ app.initTimeLine = function() {
         }
         if (app.totalPage > app.currentPage) {
             app.currentPage = app.currentPage + 1;
-            console.log(app.currentPage);
-            app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline);
+            app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline, false);
         }
     });
 };
