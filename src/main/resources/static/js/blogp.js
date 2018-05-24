@@ -10,7 +10,7 @@ app.homeCardPageSize = 6;
 app.firstTimeInit = true;
 
 app.initBlogCardList = function() {
-    app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard, true);
+    app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
 };
 
 app.loadHomeCard = function (data) {
@@ -123,11 +123,11 @@ app.bindPagination = function () {
             var originUrl = window.location.origin;
             window.history.pushState({}, 0, originUrl + '/page/' + page);
         }
-        app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard, true);
+        app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
     });
 };
 
-app.getBlogListData = function (currentPage, pageSize, successFn, isAsync) {
+app.getBlogListData = function (currentPage, pageSize, successFn) {
     var search = window.location.search;
     var filter = null;
     if (search !== null && search.length > 0 && search.indexOf("=") !== -1) {
@@ -136,7 +136,6 @@ app.getBlogListData = function (currentPage, pageSize, successFn, isAsync) {
     $.ajax({
         type: "GET",
         url: "/api/v1/manager/list",
-        async: isAsync,
         data: {
             currentPage: currentPage,
             pageSize: pageSize,
@@ -258,11 +257,12 @@ app.blogSubmitClick = function () {
     });
 };
 
+app.isTimeLineLoadFinished = false;
 app.scrollBefore = 0;
 app.initTimeLine = function() {
     var load = false;
 
-    app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline, false);
+    app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline);
     $(window).bind('scroll', function () {
         var windowTop = $(window).scrollTop();
         var lastTop = $(".time-card-wrapper:last").children(".time-card:last-child").offset().top;
@@ -270,12 +270,13 @@ app.initTimeLine = function() {
             load = true;
             app.scrollBefore = windowTop;
         }
-        if (!load) {
+        if (!load || !app.isTimeLineLoadFinished) {
             return;
         }
+        app.isTimeLineLoadFinished = false;
         if (app.totalPage > app.currentPage) {
             app.currentPage = app.currentPage + 1;
-            app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline, false);
+            app.getBlogListData(app.currentPage, app.timelinePageSize, app.loadTimeline);
         }
     });
 };
@@ -301,6 +302,7 @@ app.loadTimeline = function (data) {
     }
     cardWrapper = cardWrapper + '</div>';
     $('.timeline').append(cardWrapper);
+    app.isTimeLineLoadFinished = true;
 
     if (data.currentPage >= app.totalPage) {
         if ($('.timeline .timeline-end').length <= 0) {

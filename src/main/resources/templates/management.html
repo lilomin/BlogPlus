@@ -24,7 +24,7 @@
                 <tbody th:each="blog,iter : ${page.list}">
                     <tr>
                     <th scope="row" th:text="${iter.index + 1}" th:id="${blog.blogId}"></th>
-                    <td><a th:href="@{post/{postId}(postId=${blog.path})}" th:text="${blog.title}"></a></td>
+                    <td><a th:href="@{/post/{postId}(postId=${blog.path})}" th:text="${blog.title}"></a></td>
                     <td th:text="${blog.tags}"></td>
                     <td th:text="${blog.createDay}"></td>
                     <td>
