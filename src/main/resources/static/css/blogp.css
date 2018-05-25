@@ -206,7 +206,7 @@ blockquote p {
     body .container-fluid {
         margin-top: 20%;
     }
-    .post-content image {
+    .post-content img {
         width: 100%;
     }
 }
@@ -224,7 +224,7 @@ blockquote p {
         padding: 2% 12%;
         margin-top: 10%;
     }
-    .post-content image {
+    .post-content img {
         width: 100%;
     }
 }
