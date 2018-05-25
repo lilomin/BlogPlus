@@ -35,6 +35,8 @@
         </div>
     </div>
 
+    <button class="material-scrolltop" type="button"></button>
+
     <div th:replace="fragments/layout :: footer"></div>
 
 </body>
@@ -57,6 +59,20 @@
         language: 'zh-CN'
     });
     gitalk.render('gitalk-container')
+</script>
+
+<link rel="stylesheet" href="/plugin/scrolltop/material-scrolltop.css">
+<script type="text/javascript" src="/plugin/scrolltop/material-scrolltop.js"></script>
+<script>
+    $(document).ready(function() {
+        $('body').materialScrollTop({
+            revealElement: 'header',
+            revealPosition: 'bottom',
+            onScrollEnd: function() {
+                console.log('Scrolling End');
+            }
+        });
+    });
 </script>
 
 </html>
