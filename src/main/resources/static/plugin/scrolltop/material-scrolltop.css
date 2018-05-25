@@ -20,8 +20,6 @@
     overflow: hidden;
     outline: none;
     border: none;
-    border-radius: 2px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
     cursor: hand;
     border-radius: 50%;
     background: #03A9F4;
@@ -69,8 +67,8 @@
 }
 
 .material-scrolltop.reveal {
-    width: 56px;
-    height: 56px;
+    width: 45px;
+    height: 45px;
 }
 
 .material-scrolltop span {

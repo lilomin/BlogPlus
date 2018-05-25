@@ -38,6 +38,20 @@
         })();
     </script>
 
+    <link rel="stylesheet" href="/plugin/scrolltop/material-scrolltop.css">
+    <script type="text/javascript" src="/plugin/scrolltop/material-scrolltop.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('body').materialScrollTop({
+                revealElement: 'header',
+                revealPosition: 'bottom',
+                onScrollEnd: function() {
+                    console.log('Scrolling End');
+                }
+            });
+        });
+    </script>
+
 </head>
 
 <header id="header" class="header wow" th:fragment="header">
@@ -169,6 +183,7 @@
 </div>
 
 <footer id="footer" class="footer hidden-print" th:fragment="footer">
+    <button class="material-scrolltop" type="button"></button>
     <div class="container">
         <div class="row">
             <div class="footer-about col-md-4 col-sm-12" id="about">

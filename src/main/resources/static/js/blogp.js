@@ -119,10 +119,10 @@ app.bindPagination = function () {
             app.currentPage--;
         } else {
             app.currentPage = page;
-            // update browser url
-            var originUrl = window.location.origin;
-            window.history.pushState({}, 0, originUrl + '/page/' + page);
         }
+        // update browser url
+        var originUrl = window.location.origin;
+        window.history.pushState({}, 0, originUrl + '/page/' + app.currentPage);
         app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
     });
 };
