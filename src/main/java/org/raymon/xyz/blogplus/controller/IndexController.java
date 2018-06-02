@@ -37,20 +37,6 @@ public class IndexController {
 	private ManagerService managerService;
 	@Resource
 	private UserService userService;
-	@Resource
-	private FileService fileService;
-	
-	/**
-	 * 文件系统首页
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value = "file/{path}", method = RequestMethod.GET)
-	public String index(@PathVariable("path") String path, Model model) {
-		List<FileVO> list = fileService.fileList(path);
-		model.addAttribute("files", list);
-		return "index";
-	}
 	
 	/**
 	 * 博客首页
@@ -82,11 +68,11 @@ public class IndexController {
 		return "home";
 	}
 	
-	// 待丰富
-	// @RequestMapping("/achieve")
-	// public String toAchieve(Model model) {
-	// 	return "achieve";
-	// }
+	@RequestMapping("/achieve")
+	public String toAchieve(Model model, @RequestParam(value = "tag", required = false) String tag) {
+		List<CalendarCate> cateList = managerService.getBlogCalendarCate(CommonConstant.DEFAULT_USER);
+		return "achieve";
+	}
 	
 	@RequestMapping("/timeline")
 	public String toTimeline(Model model) {

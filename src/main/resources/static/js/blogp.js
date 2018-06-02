@@ -334,7 +334,7 @@ app.blogSwitchClick = function () {
 app.blogEditClick = function () {
     $('[id=blogEdit]').bind('click', function () {
         var blogId = $(this).parent().parent().children("th").attr("id");
-        window.location.href='/edit_post?blogId=' + blogId;
+        window.location.href='/management/edit_post?blogId=' + blogId;
     });
 };
 

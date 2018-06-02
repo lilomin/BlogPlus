@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/layout :: htmlhead" th:with="title='test'">
+</head>
+
+<body>
+<div th:replace="fragments/layout :: loading"></div>
+<div th:replace="fragments/layout :: header"></div>
+<div th:replace="fragments/layout :: header-cover"></div>
+
+<div class="main-contain container-fluid">
+    <section id="achieve" class="achieve">
+
+    </section>
+</div>
+
+<div th:replace="fragments/layout :: footer"></div>
+</body>
+
+</html>
