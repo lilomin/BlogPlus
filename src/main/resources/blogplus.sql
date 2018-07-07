@@ -47,3 +47,4 @@ CREATE TABLE blog_tag (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+ALTER TABLE blog ADD COLUMN read_times INT(4) DEFAULT 0;

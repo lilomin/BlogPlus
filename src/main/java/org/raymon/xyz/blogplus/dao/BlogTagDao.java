@@ -24,6 +24,17 @@ public interface BlogTagDao {
 	int saveBlogTag(BlogTag tag);
 	
 	@Select(
+			"select * from blog_tag where user_id = #{userId}"
+	)
+	@Results({
+			@Result(property = "blogId", column = "blog_id"),
+			@Result(property = "userId", column = "user_id"),
+			@Result(property = "tag", column = "tag"),
+			@Result(property = "createTime", column = "create_time")
+	})
+	List<BlogTag> getAllTags(@Param("userId") String userId);
+	
+	@Select(
 			"select * from blog_tag where user_id = #{userId} and blog_id = #{blogId}"
 	)
 	@Results({

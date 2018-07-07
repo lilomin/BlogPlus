@@ -1,19 +1,25 @@
 package org.raymon.xyz.blogplus.controller;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.raymon.xyz.blogplus.common.constant.CommonConstant;
 import org.raymon.xyz.blogplus.common.exception.BlogPlusException;
 import org.raymon.xyz.blogplus.common.exception.ExceptionEnum;
 import org.raymon.xyz.blogplus.common.result.ResultUtils;
+import org.raymon.xyz.blogplus.common.utils.IpUtil;
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.file.FileVO;
 import org.raymon.xyz.blogplus.model.manager.Blog;
 import org.raymon.xyz.blogplus.model.manager.CalendarCate;
+import org.raymon.xyz.blogplus.model.manager.TagCount;
 import org.raymon.xyz.blogplus.model.user.User;
 import org.raymon.xyz.blogplus.service.FileService;
 import org.raymon.xyz.blogplus.service.ManagerService;
 import org.raymon.xyz.blogplus.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Base64Utils;
@@ -23,8 +29,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lilm on 18-3-14.
@@ -59,19 +70,15 @@ public class IndexController {
 	
 	private String homePage(Model model, String page, String filter) {
 		User userInfo = userService.queryByUserId(CommonConstant.DEFAULT_USER);
-		// List<CalendarCate> cateList = managerService.getBlogCalendarCate(CommonConstant.DEFAULT_USER);
+		List<CalendarCate> cateList = managerService.getBlogCalendarCate(CommonConstant.DEFAULT_USER);
+		List<TagCount> tags = managerService.getAllBlogTags(CommonConstant.DEFAULT_USER);
 		model.addAttribute("user", userInfo);
-		// model.addAttribute("cateList", cateList);
+		model.addAttribute("cateList", cateList);
+		model.addAttribute("tags", tags);
 		if (filter != null) {
 			model.addAttribute("filter", filter);
 		}
 		return "home";
-	}
-	
-	@RequestMapping("/achieve")
-	public String toAchieve(Model model, @RequestParam(value = "tag", required = false) String tag) {
-		List<CalendarCate> cateList = managerService.getBlogCalendarCate(CommonConstant.DEFAULT_USER);
-		return "achieve";
 	}
 	
 	@RequestMapping("/timeline")
@@ -118,6 +125,38 @@ public class IndexController {
 		return "management";
 	}
 	
+	private static LoadingCache<String, Set<String>> readerCache;
+	
+	private boolean needReadTimesPlus(String blogId, String ip){
+		if (readerCache != null) {
+			Set<String> ips = null;
+			try {
+				ips = readerCache.get(blogId);
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+			if (ips == null || ips.contains(ip)) {
+				return false;
+			}
+			ips.add(ip);
+			readerCache.put(blogId, ips);
+			return true;
+		} else {
+			readerCache = CacheBuilder.newBuilder()
+					.expireAfterWrite(5, TimeUnit.MINUTES)
+					.initialCapacity(16).maximumSize(5000)
+					.build(new CacheLoader<String, Set<String>>() {
+						@Override
+						public Set<String> load(String s) throws Exception {
+							Set<String> ips = new HashSet<>();
+							ips.add(ip);
+							return ips;
+						}
+					});
+		}
+		return true;
+	}
+	
 	/**
 	 * 博客展示页面
 	 * @param userId
@@ -127,13 +166,16 @@ public class IndexController {
 	 */
 	@RequestMapping(value = "/post/{blogId}", method = RequestMethod.GET)
 	public String blogPost(@RequestParam(value = "userId", defaultValue = CommonConstant.DEFAULT_USER) String userId,
-	                       @PathVariable("blogId") String blogId, Model model, HttpSession session) {
+	                       @PathVariable("blogId") String blogId, Model model, HttpSession session, HttpServletRequest request) {
 		if (blogId == null) {
 			return "home";
 		}
 		Blog result = managerService.getByBlogId(userId, blogId);
 		if (result == null) {
 			return homePage(model, null, null);
+		}
+		if (needReadTimesPlus(blogId, IpUtil.getIpAddr(request))) {
+			managerService.blogReadPlus(userId, blogId);
 		}
 		model.addAttribute("blog", result);
 		return "post";

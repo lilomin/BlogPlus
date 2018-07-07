@@ -24,7 +24,7 @@ public interface ManagerDao {
 	
 	@Insert(
 			"insert into blog values " +
-					"(#{blogId}, #{userId}, #{title}, #{content}, #{createTime}, #{updateTime}, #{description}, #{hidden}, #{image})"
+					"(#{blogId}, #{userId}, #{title}, #{content}, #{createTime}, #{updateTime}, #{description}, #{hidden}, #{image}, 0)"
 	)
 	int createBlog(Blog blog);
 	
@@ -43,7 +43,8 @@ public interface ManagerDao {
 			@Result(property = "hidden", column = "hidden"),
 			@Result(property = "image", column = "image"),
 			@Result(property = "createTime", column = "create_time"),
-			@Result(property = "updateTime", column = "update_time")
+			@Result(property = "updateTime", column = "update_time"),
+			@Result(property = "readTimes", column = "read_times")
 	})
 	List<Blog> selectByPage(@Param("userId") String userId, @Param("limit") int limit, @Param("offset") int offset,
 	                        @Param("includeHidden") boolean includeHidden, @Param("createMonth") String createMonth);
@@ -52,14 +53,14 @@ public interface ManagerDao {
 	int countAll(@Param("userId") String userId, @Param("includeHidden") boolean includeHidden, @Param("createMonth") String createMonth);
 	
 	@Select(
-			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog " +
+			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time, read_times from blog " +
 					"where user_id = #{userId} and blog_id = #{blogId}"
 	)
 	@ResultMap("blogMap")
 	Blog selectByBlogId(@Param("userId") String userId, @Param("blogId") String blogId);
 	
 	@Select(
-			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog " +
+			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time, read_times from blog " +
 					"where user_id = #{userId} and title = #{title}"
 	)
 	@ResultMap("blogMap")
@@ -71,6 +72,12 @@ public interface ManagerDao {
 	)
 	int updateBlogStatus(@Param("userId") String userId, @Param("blogId") String blogId,
 	                     @Param("hidden") boolean hidden, @Param("updateTime") Date updateTime);
+	
+	@Update(
+			"update blog set read_times = read_times + 1 " +
+					"where blog_id = #{blogId} and user_id = #{userId}"
+	)
+	int blogReadTimesPlus(@Param("userId") String userId, @Param("blogId") String blogId);
 	
 	@Select(
 			"select count(1) as blog_count, create_month from (select blog_id, DATE_FORMAT(create_time, '%m-%Y') as create_month from blog " +
@@ -87,7 +94,7 @@ public interface ManagerDao {
 		
 		public String getBlogListByPage(Map<String, Object> params) {
 			StringBuilder sql =
-					new StringBuilder("select blog_id, user_id, title, content, description, hidden, image, create_time, update_time from blog where ");
+					new StringBuilder("select blog_id, user_id, title, content, description, hidden, image, create_time, update_time, read_times from blog where ");
 			
 			generate(params, sql);
 			Object limitParam = params.get("limit");

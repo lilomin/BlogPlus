@@ -17,6 +17,7 @@ public class Blog {
 	private Date updateTime;
 	private boolean hidden;
 	private String image;
+	private Integer readTimes;
 	
 	// 访问路径
 	private String path;
@@ -97,6 +98,14 @@ public class Blog {
 	
 	public void setImage(String image) {
 		this.image = image;
+	}
+	
+	public Integer getReadTimes() {
+		return readTimes;
+	}
+	
+	public void setReadTimes(Integer readTimes) {
+		this.readTimes = readTimes;
 	}
 	
 	public List<String> getTags() {

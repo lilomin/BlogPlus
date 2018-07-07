@@ -5,6 +5,7 @@ app.currentPage = 1;
 
 app.timelinePageSize = 4;
 app.homeCardPageSize = 6;
+app.homeCardEachLine = 2;
 
 // first time to init the home card
 app.firstTimeInit = true;
@@ -17,8 +18,12 @@ app.loadHomeCard = function (data) {
     app.totalPage = data.totalPage;
     var list = data.list;
     
-    var cardDeck_1 = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
-    var cardDeck_2 = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
+    var cardDeck = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
+    var cardDeck_tmp = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
+    var homeCard = $('#home-card');
+    $(homeCard).empty();
+
+    var currentLine = 1;
     for (var index = 1; index <= list.length; index++) {
         var blog = data.list[index - 1];
         var tags = app.generateTags(blog.tags);
@@ -31,19 +36,21 @@ app.loadHomeCard = function (data) {
                 '<small class="text-muted">' + blog.createDay + '</small><a href="/post/' + blog.path + '" ' +
                 'style="float:right;">详情<span></span></a></p></div></div>';
 
-        if (index <= app.homeCardPageSize / 2) {
-            cardDeck_1 += card;
+        if (currentLine * app.homeCardEachLine >= index) {
+            cardDeck += card;
         } else {
-            cardDeck_2 += card;
+            cardDeck += '</div>';
+            $(homeCard).append(cardDeck);
+
+            currentLine++;
+            cardDeck = cardDeck_tmp;
+            cardDeck += card;
         }
-    }
-    cardDeck_1 += '</div>';
-    cardDeck_2 += '</div>';
-    var homeCard = $('#home-card');
-    $(homeCard).empty();
-    $(homeCard).append(cardDeck_1);
-    if (list.length > app.homeCardPageSize / 2) {
-        $(homeCard).append(cardDeck_2);
+        if (index === list.length) {
+            cardDeck += '</div>';
+            $(homeCard).append(cardDeck);
+
+        }
     }
 
     $('.row .pagination').empty();

@@ -13,6 +13,7 @@ import org.raymon.xyz.blogplus.model.manager.Blog;
 import org.raymon.xyz.blogplus.model.manager.BlogTag;
 import org.raymon.xyz.blogplus.model.manager.CalendarCate;
 import org.raymon.xyz.blogplus.model.manager.TagChangeParam;
+import org.raymon.xyz.blogplus.model.manager.TagCount;
 import org.raymon.xyz.blogplus.model.user.User;
 import org.raymon.xyz.blogplus.service.ManagerService;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,15 @@ import org.thymeleaf.util.DateUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -196,6 +201,11 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 	
 	@Override
+	public void blogReadPlus(String userId, String blogId) {
+		managerDao.blogReadTimesPlus(userId, blogId);
+	}
+	
+	@Override
 	public boolean blogTagChange(TagChangeParam param) {
 		if (param == null) {
 			return true;
@@ -241,4 +251,23 @@ public class ManagerServiceImpl implements ManagerService {
 		return result;
 	}
 	
+	@Override
+	public List<TagCount> getAllBlogTags(String userId) {
+		List<BlogTag> blogTags = blogTagDao.getAllTags(userId);
+		Map<String, Integer> tagMap = new HashMap<>();
+		for (BlogTag blogTag : blogTags) {
+			String tag = blogTag.getTag();
+			Integer count = tagMap.get(tag);
+			if (count == null) {
+				tagMap.put(tag, 1);
+			} else {
+				tagMap.put(tag, ++count);
+			}
+		}
+		List<TagCount> results = new ArrayList<>();
+		for (Map.Entry<String, Integer> entry : tagMap.entrySet()) {
+			results.add(new TagCount(entry.getKey(), String.valueOf(entry.getValue())));
+		}
+		return results;
+	}
 }
