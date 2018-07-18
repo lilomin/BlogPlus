@@ -22,7 +22,7 @@ app.generateBreadCrumb = function () {
     var urlParams = app.getRequestParam();
 
     if (urlParams.tag !== undefined && urlParams.tag.length > 0) {
-        breadCrumb += '<span>' + ' / 标签: ' + urlParams.tag + '</span>';
+        breadCrumb += '<span>' + ' / 标签: ' + decodeURI(urlParams.tag) + '</span>';
     } else if (urlParams.filter !== undefined && urlParams.filter.length > 0) {
         breadCrumb += '<span>' + ' / 归档: ' + urlParams.filter + '</span>';
     } else {
@@ -162,7 +162,7 @@ app.bindPagination = function () {
 app.getBlogListData = function (currentPage, pageSize, successFn) {
     var urlParams = app.getRequestParam();
     var filter = urlParams.filter;
-    var tag = urlParams.tag;
+    var tag = urlParams.tag !== undefined ? decodeURI(urlParams.tag) : null;
     $.ajax({
         type: "GET",
         url: "/api/v1/manager/list",
