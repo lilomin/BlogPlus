@@ -120,7 +120,7 @@ public class IndexController {
 		if (u == null) {
 			throw new BlogPlusException(ExceptionEnum.SERVER_ERROR);
 		}
-		Page data = managerService.getBlogList(u.getUserId(), page, 10, true, null);
+		Page data = managerService.getBlogList(u.getUserId(), page, 10, true, null, null);
 		model.addAttribute("page", data);
 		return "management";
 	}

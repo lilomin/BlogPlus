@@ -64,6 +64,11 @@ html, body {
     font-size: 18px;
 }
 
+.footer svg {
+    fill: white;
+    vertical-align: middle;
+}
+
 .copy-right {
     text-align: center;
     background-color: #343a40;
@@ -128,8 +133,13 @@ pre code {
 
 .home-me {
     text-align: center;
+    color: white;
     border: none!important;
     background: linear-gradient(to bottom, #064a9a, white);
+}
+
+.home-me a img {
+    margin: 0 0.1rem;
 }
 
 .home-me .home-logo {
@@ -153,6 +163,18 @@ pre code {
 
 .home-me a:hover {
     text-decoration: none!important;
+}
+
+.bread-crumb {
+    padding: 1rem 0 0 1rem;
+}
+
+.bread-crumb svg {
+    fill: #007bff;
+}
+
+.bread-crumb a, span, svg {
+    vertical-align: middle;
 }
 
 aside .side-card {
@@ -226,8 +248,6 @@ blockquote p {
     }
     .container-fluid .card-deck .card {
         margin-bottom: 15px;
-        margin-left: 4%;
-        margin-right: 5%;
     }
     body .container-fluid {
         margin-top: 20%;
@@ -252,6 +272,9 @@ blockquote p {
     .card .card-img-top {
         height: 180px;
     }
+    #home-card .card {
+        max-width: 47%;
+    }
 }
 
 /* large */
@@ -263,6 +286,9 @@ blockquote p {
     .card .card-img-top {
         height: 270px;
     }
+    #home-card .card {
+        max-width: 47%;
+    }
 }
 
 /* very large */
@@ -273,6 +299,9 @@ blockquote p {
     }
     .card .card-img-top {
         height: 270px;
+    }
+    #home-card .card {
+        max-width: 47%;
     }
 }
 

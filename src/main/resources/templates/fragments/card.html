@@ -1,47 +1,54 @@
-<th:block th:fragment="card" th:with="size=${#lists.size(list)}">
-    <div class="card-deck wow fadeInRight" th:if="${size le 3}">
-        <div class="card" th:each="blog : ${list}">
-            <img class="card-img-top" th:src="@{${blog.image}}" alt="Card image cap">
+<th:block th:fragment="home-me">
+    <div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">
+        <div class="home-me card"   >
             <div class="card-body">
-                <h5 class="card-title" th:text="${blog.title}">Card title</h5>
-                <p class="card-text card-desc" th:text="${blog.description}"></p>
-                <p class="card-text">
-                    <small class="text-muted" th:text="${blog.createDay}"></small>
-                    <a th:href="@{post/{postId}(postId=${blog.path})}" style="float:right;">详情<span>>></span></a>
-                </p>
+                <img src="/images/avatar.png" width="100" alt="Raymon logo" class="home-logo" title="">
+                <h5 class="card-title">Raymon</h5>
+                <hr style="width: 30%; margin-left: 35%;">
+                <p>Zero to Hero</p>
+                <hr style="width: 50%; margin-left: 25%;">
+                <a href="mailto:lilomin@126.com">
+                    <img src="/images/social/mail_light.png">
+                </a>
+                <a href="https://github.com/lilomin">
+                    <img src="/images/social/github_light.png">
+                </a>
+                <a href="https://music.163.com/#/user/home?id=60988330">
+                    <img src="/images/social/ne_music_light.png">
+                </a>
+                <a>
+                    <img style="cursor: pointer;" title="lilomin" src="/images/social/wechat_light.png">
+                </a>
             </div>
         </div>
     </div>
+    <div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">
+        <div class="card">
+            <div class="card-body">
+                <div style="margin-bottom: 1rem;">
+                    <embed src="/images/svg/tag.svg" width="20" height="20" style="vertical-align: middle;"
+                           type="image/svg+xml"></embed>
+                    <span><h5 class="card-title" style="display: inline;vertical-align: middle;">标签</h5></span>
 
-    <div class="card-deck wow fadeInRight" th:if="${size gt 3}">
-        <th:block th:each="blog,stat : ${list}">
-            <div class="card" th:if="${stat.index lt 3}">
-                <img class="card-img-top" th:src="@{${blog.image}}" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${blog.title}">Card title</h5>
-                    <p class="card-text card-desc" th:text="${blog.description}"></p>
-                    <p class="card-text">
-                        <small class="text-muted" th:text="${blog.createDay}"></small>
-                        <a th:href="@{post/{postId}(postId=${blog.path})}" style="float:right;">详情<span>>></span></a>
-                    </p>
                 </div>
+                <a th:href="@{/?tag={tag}(tag=${tag.tag})}" class="card-link" style="margin: 1px 7px 1px 0;" th:each="tag : ${tags}">
+                    <button type="button" class="btn btn-outline-primary" th:text="${tag.tag}"></button>
+                </a>
             </div>
-        </th:block>
+        </div>
     </div>
-
-    <div class="card-deck wow fadeInLeft" th:if="${size gt 3}">
-        <th:block th:each="blog,stat : ${list}">
-            <div class="card" th:if="${stat.index ge 3}">
-                <img class="card-img-top" th:src="@{${blog.image}}" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${blog.title}">Card title</h5>
-                    <p class="card-text card-desc" th:text="${blog.description}"></p>
-                    <p class="card-text">
-                        <small class="text-muted" th:text="${blog.createDay}"></small>
-                        <a th:href="@{post/{postId}(postId=${blog.path})}" style="float:right;">详情<span>>></span></a>
-                    </p>
-                </div>
+    <div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">
+        <div class="card">
+            <div class="card-body">
+                <embed src="/images/svg/archive.svg" width="20" height="20" style="vertical-align: middle;" type="image/svg+xml"></embed>
+                <span><h5 class="card-title" style="display: inline;vertical-align: middle;">归档</h5></span>
             </div>
-        </th:block>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center" th:each="cate : ${cateList}">
+                    <a th:href="@{/?filter={filter}(filter=${cate.filterValue})}" th:text="${cate.title}"></a>
+                    <span class="badge badge-primary badge-pill" th:text="${cate.count}"></span>
+                </li>
+            </ul>
+        </div>
     </div>
 </th:block>

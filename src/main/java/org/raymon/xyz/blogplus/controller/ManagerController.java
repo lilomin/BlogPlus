@@ -1,8 +1,5 @@
 package org.raymon.xyz.blogplus.controller;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import org.raymon.xyz.blogplus.common.constant.CommonConstant;
 import org.raymon.xyz.blogplus.common.exception.BlogPlusException;
 import org.raymon.xyz.blogplus.common.exception.ExceptionEnum;
@@ -49,8 +46,9 @@ public class ManagerController {
 	public Result getBlogByPage(@RequestParam(value = "userId", defaultValue = CommonConstant.DEFAULT_USER) String userId,
 	                            @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
 	                            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-	                            @RequestParam(value = "filter", required = false) String filter) {
-		Page page = managerService.getBlogList(userId, currentPage, pageSize, false, filter);
+	                            @RequestParam(value = "filter", required = false) String filter,
+	                            @RequestParam(value = "tag", required = false) String tag) {
+		Page page = managerService.getBlogList(userId, currentPage, pageSize, false, filter, tag);
 		return ResultUtils.success(page);
 	}
 	

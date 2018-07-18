@@ -87,15 +87,47 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 	
 	@Override
-	public Page<Blog> getBlogList(String userId, int currentPage, int pageSize, boolean includeHidden, String filter) {
-		int total = 0;
-		total = managerDao.countAll(userId, includeHidden, filter);
+	public Page<Blog> getBlogList(String userId, int currentPage, int pageSize, boolean includeHidden, String filter, String tag) {
+		if (tag != null && tag.trim().length() > 0) {
+			return selectByTag(userId, currentPage, pageSize, includeHidden, tag);
+		} else {
+			return selectByFilter(userId, currentPage, pageSize, includeHidden, filter);
+		}
+	}
+	
+	private Page<Blog> selectByFilter(String userId, int currentPage, int pageSize, boolean includeHidden, String filter) {
+		String filterMonth = null;
+		String filterYear = null;
+		if (filter != null && filter.contains("-")) {
+			filterMonth = filter;
+		} else {
+			filterYear = filter;
+		}
+		int total = managerDao.countAll(userId, includeHidden, filterMonth, filterYear);
 		int offset = currentPage * pageSize - pageSize;
 		if (offset > total) {
 			return new Page<>();
 		}
-		List<Blog> dataList = null;
-		dataList = managerDao.selectByPage(userId, pageSize, offset, includeHidden, filter);
+		List<Blog> dataList = managerDao.selectByPage(userId, pageSize, offset, includeHidden, filterMonth, filterYear, null);
+		
+		setterBlogTags(userId, dataList);
+		Page<Blog> page = new Page<>(total, currentPage, pageSize, dataList);
+		return page;
+	}
+	
+	private Page<Blog> selectByTag(String userId, int currentPage, int pageSize, boolean includeHidden, String tag) {
+		int total = managerDao.countAllByTag(userId, tag);
+		int offset = currentPage * pageSize - pageSize;
+		if (offset > total) {
+			return new Page<>();
+		}
+		List<Blog> dataList = managerDao.selectByPage(userId, pageSize, offset, includeHidden, null, null, tag);
+		setterBlogTags(userId, dataList);
+		Page<Blog> page = new Page<>(total, currentPage, pageSize, dataList);
+		return page;
+	}
+	
+	private void setterBlogTags(String userId, List<Blog> dataList) {
 		if (dataList != null && !dataList.isEmpty()) {
 			Iterator<Blog> it = dataList.iterator();
 			while (it.hasNext()) {
@@ -110,9 +142,6 @@ public class ManagerServiceImpl implements ManagerService {
 				b.setTags(generateBlogTags(blogTagDao.getTags(userId, b.getBlogId())));
 			}
 		}
-		Page<Blog> page = new Page<>(total, currentPage, pageSize, dataList);
-		page.setFilter(filter);
-		return page;
 	}
 	
 	/**
@@ -232,23 +261,30 @@ public class ManagerServiceImpl implements ManagerService {
 	
 	@Override
 	public List<CalendarCate> getBlogCalendarCate(String userId) {
-		List<CalendarCate> result = managerDao.groupByCreateMonth(userId);
-		if (result == null) {
+		List<CalendarCate> calendarCates = managerDao.groupByCreateMonth(userId);
+		if (calendarCates == null) {
 			return new ArrayList<>();
 		}
-		result.forEach(calendarCate -> {
+		Map<String, Integer> yearDataMaps = new HashMap<>();
+		calendarCates.forEach(calendarCate -> {
 			// MM-YYYY
 			String date = calendarCate.getFilterValue();
 			if (date != null && date.contains("-")) {
 				String[] arr = date.split("-");
-				Calendar calendar = Calendar.getInstance();
-				calendar.set(Calendar.YEAR, Integer.valueOf(arr[1]));
-				calendar.set(Calendar.MONTH, Integer.valueOf(arr[0]) - 1);
-				String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CHINA);
-				calendarCate.setTitle(month + "  " + arr[1]);
+				if (arr.length == 2) {
+					yearDataMaps.merge(arr[1], calendarCate.getCount(), (oldV, newV) -> oldV + calendarCate.getCount());
+				}
 			}
 		});
-		return result;
+		
+		List<CalendarCate> result = new ArrayList<>();
+		yearDataMaps.forEach((k, v) ->
+			result.add(new CalendarCate(k + "年写了些啥呢", k, v))
+		);
+		
+		return result.stream()
+				.sorted()
+				.collect(Collectors.toList());
 	}
 	
 	@Override

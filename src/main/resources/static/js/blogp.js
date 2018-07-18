@@ -14,14 +14,34 @@ app.initBlogCardList = function() {
     app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
 };
 
+app.generateBreadCrumb = function () {
+    var breadCrumb = '<div class="bread-crumb wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">' +
+        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16">' +
+        '<path fill-rule="evenodd" d="M16 9l-3-3V2h-2v2L8 1 0 9h2l1 5c0 .55.45 1 1 1h8c.55 0 1-.45 1-1l1-5h2zm-4 5H9v-4H7v4H4L2.81 7.69 8 2.5l5.19 5.19L12 14z"/></svg>&nbsp;' +
+        '<a href="/">首页</a>';
+    var urlParams = app.getRequestParam();
+
+    if (urlParams.tag !== undefined && urlParams.tag.length > 0) {
+        breadCrumb += '<span>' + ' / 标签: ' + urlParams.tag + '</span>';
+    } else if (urlParams.filter !== undefined && urlParams.filter.length > 0) {
+        breadCrumb += '<span>' + ' / 归档: ' + urlParams.filter + '</span>';
+    } else {
+        return '';
+    }
+
+    breadCrumb += '</div>';
+    return breadCrumb;
+};
+
 app.loadHomeCard = function (data) {
     app.totalPage = data.totalPage;
     var list = data.list;
-    
+
     var cardDeck = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
     var cardDeck_tmp = '<div class="card-deck wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">';
     var homeCard = $('#home-card');
     $(homeCard).empty();
+    $(homeCard).append(app.generateBreadCrumb());
 
     var currentLine = 1;
     for (var index = 1; index <= list.length; index++) {
@@ -129,24 +149,28 @@ app.bindPagination = function () {
         }
         // update browser url
         var originUrl = window.location.origin;
-        window.history.pushState({}, 0, originUrl + '/page/' + app.currentPage);
+        var search = window.location.search;
+        if (search !== null && search.length > 0) {
+            window.history.pushState({}, 0, originUrl + '/page/' + app.currentPage + search);
+        } else {
+            window.history.pushState({}, 0, originUrl + '/page/' + app.currentPage);
+        }
         app.getBlogListData(app.currentPage, app.homeCardPageSize, app.loadHomeCard);
     });
 };
 
 app.getBlogListData = function (currentPage, pageSize, successFn) {
-    var search = window.location.search;
-    var filter = null;
-    if (search !== null && search.length > 0 && search.indexOf("=") !== -1) {
-        filter = search.substr(search.indexOf("=") + 1, search.length);
-    }
+    var urlParams = app.getRequestParam();
+    var filter = urlParams.filter;
+    var tag = urlParams.tag;
     $.ajax({
         type: "GET",
         url: "/api/v1/manager/list",
         data: {
             currentPage: currentPage,
             pageSize: pageSize,
-            filter: filter
+            filter: filter,
+            tag: tag
         },
         success: function (data, status) {
             if (data.success) {
@@ -157,6 +181,19 @@ app.getBlogListData = function (currentPage, pageSize, successFn) {
             }
         }
     });
+};
+
+app.getRequestParam = function () {
+    var url = location.search;
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        strs = str.split("&");
+        for (var i = 0; i < strs.length; i++) {
+            theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+        }
+    }
+    return theRequest;
 };
 
 app.loginBtnDisplay = function () {

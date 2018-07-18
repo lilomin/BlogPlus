@@ -47,10 +47,15 @@ public interface ManagerDao {
 			@Result(property = "readTimes", column = "read_times")
 	})
 	List<Blog> selectByPage(@Param("userId") String userId, @Param("limit") int limit, @Param("offset") int offset,
-	                        @Param("includeHidden") boolean includeHidden, @Param("createMonth") String createMonth);
+	                        @Param("includeHidden") boolean includeHidden, @Param("createMonth") String createMonth,
+	                        @Param("createYear") String createYear, @Param("tag") String tag);
 	
 	@SelectProvider(type = BlogProvider.class, method = "getCountByFilter")
-	int countAll(@Param("userId") String userId, @Param("includeHidden") boolean includeHidden, @Param("createMonth") String createMonth);
+	int countAll(@Param("userId") String userId, @Param("includeHidden") boolean includeHidden,
+	             @Param("createMonth") String createMonth, @Param("createYear") String createYear);
+	
+	@SelectProvider(type = BlogProvider.class, method = "getCountByTag")
+	int countAllByTag(@Param("userId") String userId, @Param("tag") String tag);
 	
 	@Select(
 			"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time, read_times from blog " +
@@ -92,21 +97,14 @@ public interface ManagerDao {
 	
 	class BlogProvider {
 		
+		private static final String BASE_SQL =
+				"select blog_id, user_id, title, content, description, hidden, image, create_time, update_time, read_times from blog where ";
+		
 		public String getBlogListByPage(Map<String, Object> params) {
-			StringBuilder sql =
-					new StringBuilder("select blog_id, user_id, title, content, description, hidden, image, create_time, update_time, read_times from blog where ");
+			StringBuilder sql = new StringBuilder(BASE_SQL);
 			
 			generate(params, sql);
-			Object limitParam = params.get("limit");
-			Object offsetParam = params.get("offset");
-			
-			if (offsetParam == null) {
-				offsetParam = 1;
-			}
-			if (limitParam == null) {
-				limitParam = 6;
-			}
-			sql.append(" order by create_time desc limit ").append(limitParam).append(" offset ").append(offsetParam);
+			dataOrderAndLimit(params, sql);
 			
 			return sql.toString();
 		}
@@ -118,9 +116,24 @@ public interface ManagerDao {
 			return sql.toString();
 		}
 		
+		public String getCountByTag(Map<String, Object> params) {
+			return "select count(1) from blog_tag where user_id = '" + params.get("userId") + "' and tag = '" + params.get("tag") + "'";
+		}
+		
 		private void generate(Map<String, Object> params, StringBuilder sql) {
 			Object hiddenParam = params.get("includeHidden");
-			Object createMonthParam = params.get("createMonth");
+			Object createMonthParam = null;
+			if (params.containsKey("createMonth")) {
+				createMonthParam = params.get("createMonth");
+			}
+			Object createYearParam = null;
+			if (params.containsKey("createYear")) {
+				createYearParam = params.get("createYear");
+			}
+			Object tagParam = null;
+			if (params.containsKey("tag")) {
+				tagParam = params.get("tag");
+			}
 			
 			sql.append("user_id = '").append(params.get("userId")).append("'");
 			if (hiddenParam != null && !(Boolean) hiddenParam) {
@@ -132,6 +145,27 @@ public interface ManagerDao {
 				// MM-YYYY
 				sql.append(" and DATE_FORMAT(create_time, '%m-%Y') = '").append(createMonthParam).append("'");
 			}
+			
+			if (createYearParam != null && !createYearParam.toString().trim().isEmpty()) {
+				sql.append(" and DATE_FORMAT(create_time, '%Y') = '").append(createYearParam).append("'");
+			}
+			
+			if (tagParam != null && !tagParam.toString().trim().isEmpty()) {
+				sql.append(" and blog_id in (select blog_id from blog_tag where tag = '").append(tagParam).append("')");
+			}
+		}
+		
+		private void dataOrderAndLimit(Map<String, Object> params, StringBuilder sql) {
+			Object limitParam = params.get("limit");
+			Object offsetParam = params.get("offset");
+			
+			if (offsetParam == null) {
+				offsetParam = 1;
+			}
+			if (limitParam == null) {
+				limitParam = 6;
+			}
+			sql.append(" order by create_time desc limit ").append(limitParam).append(" offset ").append(offsetParam);
 		}
 		
 	}

@@ -3,11 +3,20 @@ package org.raymon.xyz.blogplus.model.manager;
 /**
  * Created by lilm on 18-5-5.
  */
-public class CalendarCate {
+public class CalendarCate implements Comparable<CalendarCate> {
 	
 	private String title;
 	private String filterValue;
-	private String count;
+	private Integer count;
+	
+	public CalendarCate() {
+	}
+	
+	public CalendarCate(String title, String filterValue, Integer count) {
+		this.title = title;
+		this.filterValue = filterValue;
+		this.count = count;
+	}
 	
 	public String getTitle() {
 		return title;
@@ -25,11 +34,20 @@ public class CalendarCate {
 		this.filterValue = filterValue;
 	}
 	
-	public String getCount() {
+	public Integer getCount() {
 		return count;
 	}
 	
-	public void setCount(String count) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
+	
+	@Override
+	public int compareTo(CalendarCate o) {
+		if (o == null) {
+			return 0;
+		}
+		return this.title.compareTo(o.title) * -1;
+	}
+	
 }

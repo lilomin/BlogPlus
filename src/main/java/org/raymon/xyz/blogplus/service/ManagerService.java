@@ -30,7 +30,7 @@ public interface ManagerService {
 	 * @param pageSize
 	 * @return
 	 */
-	Page<Blog> getBlogList(String userId, int currentPage, int pageSize, boolean includeHidden, String filter);
+	Page<Blog> getBlogList(String userId, int currentPage, int pageSize, boolean includeHidden, String filter, String tag);
 	
 	/**
 	 * 根据博客id查询
