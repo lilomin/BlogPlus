@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!--head部分-->
 
-<head th:include="fragments/layout :: htmlhead" th:with="title='test'">
+<head th:include="fragments/layout :: htmlhead(${blog.title} + ' | Ramon Blog')">
 </head>
 
 <body>

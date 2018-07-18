@@ -5,7 +5,7 @@
                 <img src="/images/avatar.png" width="100" alt="Raymon logo" class="home-logo" title="">
                 <h5 class="card-title">Raymon</h5>
                 <hr style="width: 30%; margin-left: 35%;">
-                <p>Zero to Hero</p>
+                <p>Coding my life</p>
                 <hr style="width: 50%; margin-left: 25%;">
                 <a href="mailto:lilomin@126.com">
                     <img src="/images/social/mail_light.png">
@@ -28,11 +28,11 @@
                 <div style="margin-bottom: 1rem;">
                     <embed src="/images/svg/tag.svg" width="20" height="20" style="vertical-align: middle;"
                            type="image/svg+xml"></embed>
-                    <span><h5 class="card-title" style="display: inline;vertical-align: middle;">标签</h5></span>
+                    <span><h5 class="card-title" style="display: inline;">标签</h5></span>
 
                 </div>
                 <a th:href="@{/?tag={tag}(tag=${tag.tag})}" class="card-link" style="margin: 1px 7px 1px 0;" th:each="tag : ${tags}">
-                    <button type="button" class="btn btn-outline-primary" th:text="${tag.tag}"></button>
+                    <button type="button" class="btn btn-outline-primary" style="margin-bottom: 0.5rem;" th:text="${tag.tag}"></button>
                 </a>
             </div>
         </div>
@@ -41,7 +41,7 @@
         <div class="card">
             <div class="card-body">
                 <embed src="/images/svg/archive.svg" width="20" height="20" style="vertical-align: middle;" type="image/svg+xml"></embed>
-                <span><h5 class="card-title" style="display: inline;vertical-align: middle;">归档</h5></span>
+                <span><h5 class="card-title" style="display: inline;">归档</h5></span>
             </div>
             <ul class="list-group">
                 <li class="list-group-item d-flex justify-content-between align-items-center" th:each="cate : ${cateList}">
