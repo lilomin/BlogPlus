@@ -173,7 +173,7 @@ pre code {
     fill: #007bff;
 }
 
-.bread-crumb a, span, svg {
+.bread-crumb a, .bread-crumb span, .bread-crumb svg {
     vertical-align: middle;
 }
 
