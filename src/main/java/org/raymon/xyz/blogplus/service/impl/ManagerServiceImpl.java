@@ -304,6 +304,8 @@ public class ManagerServiceImpl implements ManagerService {
 		for (Map.Entry<String, Integer> entry : tagMap.entrySet()) {
 			results.add(new TagCount(entry.getKey(), String.valueOf(entry.getValue())));
 		}
-		return results;
+		return results.stream()
+				.sorted()
+				.collect(Collectors.toList());
 	}
 }

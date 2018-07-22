@@ -32,7 +32,10 @@
 
                 </div>
                 <a th:href="@{/?tag={tag}(tag=${tag.tag})}" class="card-link" style="margin: 1px 7px 1px 0;" th:each="tag : ${tags}">
-                    <button type="button" class="btn btn-outline-primary" style="margin-bottom: 0.5rem;" th:text="${tag.tag}"></button>
+                    <button type="button" class="btn btn-outline-primary" style="margin-bottom: 0.5rem;">
+                        <span th:text="${tag.tag}"></span>
+                        <sup th:text="${tag.count}"></sup>
+                    </button>
                 </a>
             </div>
         </div>
