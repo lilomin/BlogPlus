@@ -48,3 +48,15 @@ CREATE TABLE blog_tag (
   DEFAULT CHARSET = utf8;
 
 ALTER TABLE blog ADD COLUMN read_times INT(4) DEFAULT 0;
+
+DROP TABLE IF EXISTS blog_nav;
+CREATE TABLE blog_nav (
+  `nav_id`    INT(4) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `blog_id`   VARCHAR(32)        NOT NULL,
+  `user_id`   VARCHAR(32)        NOT NULL,
+  `nav_title` VARCHAR(32)        NOT NULL
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+ALTER TABLE blog_nav ADD COLUMN nav_alias VARCHAR(32) NOT NULL;

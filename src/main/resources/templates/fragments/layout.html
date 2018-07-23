@@ -76,9 +76,13 @@
                     <li id="nav-timeline" class="nav-item">
                         <a class="nav-link" href="/timeline">时间轴</a>
                     </li>
-                    <li id="nav-aboutme" class="nav-item">
-                        <a class="nav-link" href="/about">关于</a>
-                    </li>
+                    <!--<th:block th:if="${navs != null and navs.size() > 0}">-->
+                        <th:block th:each="nav : ${navs}">
+                            <li th:id="${'nav-' + nav.navAlias}" class="nav-item">
+                                <a class="nav-link" th:href="@{/nav/{item}(item=${nav.navAlias})}" th:text="${nav.navTitle}">关于</a>
+                            </li>
+                        </th:block>
+                    <!--</th:block>-->
                     <span th:if="${session.user eq null}">
                         <!-- <li class="nav-item">
                             <button type="button" class="login-btn btn btn-primary" style="display: none;border: none;" data-toggle="modal" data-target="#loginModal">

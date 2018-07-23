@@ -459,24 +459,6 @@ app.removeLoading = function () {
 };
 
 app.init = function() {
-    var pathname = window.location.pathname;
-    if (pathname === null || pathname === undefined || pathname === '/') {
-        $('#nav-home').addClass("active");
-    } else
-    if (pathname.indexOf('about') !== -1) {
-        $('#nav-aboutme').addClass("active");
-    } else if (pathname.indexOf('timeline') !== -1) {
-        $('#nav-timeline').addClass("active");
-    } else if (pathname.indexOf('management') !== -1) {
-        $('#nav-manageDropdown').addClass("active");
-    } else {
-        var path = pathname.substr(pathname.lastIndexOf('/') + 1, pathname.length);
-        if (!isNaN(path) && path !== null && path !== '') {
-            app.currentPage = parseInt(path);
-            $('#nav-home').addClass("active");
-        }
-    }
-
     app.blogEditClick();
     app.blogSwitchClick();
 
@@ -498,10 +480,34 @@ app.init = function() {
     app.loginClickBtn();
 };
 
+app.initNav = function () {
+    var path;
+    var pathname = window.location.pathname;
+    if (pathname === null || pathname === undefined || pathname === '/') {
+        $('#nav-home').addClass("active");
+    } else
+    if (pathname.indexOf('timeline') !== -1) {
+        $('#nav-timeline').addClass("active");
+    } else if (pathname.indexOf('management') !== -1) {
+        $('#nav-manageDropdown').addClass("active");
+    } else if (pathname.indexOf("nav") !== -1) {
+        path = pathname.substr(pathname.lastIndexOf('/') + 1, pathname.length);
+        $('#nav-' + path).addClass("active");
+    } else {
+        path = pathname.substr(pathname.lastIndexOf('/') + 1, pathname.length);
+        if (!isNaN(path) && path !== null && path !== '') {
+            app.currentPage = parseInt(path);
+            $('#nav-home').addClass("active");
+        }
+    }
+};
+
 $(function () {
     app.init();
 
     setTimeout("app.removeLoading()", 1000);
+
+    app.initNav();
 
     new WOW().init();
 });

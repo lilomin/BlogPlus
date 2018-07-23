@@ -11,6 +11,7 @@ import org.raymon.xyz.blogplus.common.utils.IpUtil;
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.file.FileVO;
 import org.raymon.xyz.blogplus.model.manager.Blog;
+import org.raymon.xyz.blogplus.model.manager.BlogNav;
 import org.raymon.xyz.blogplus.model.manager.CalendarCate;
 import org.raymon.xyz.blogplus.model.manager.TagCount;
 import org.raymon.xyz.blogplus.model.user.User;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,29 +74,42 @@ public class IndexController {
 		User userInfo = userService.queryByUserId(CommonConstant.DEFAULT_USER);
 		List<CalendarCate> cateList = managerService.getBlogCalendarCate(CommonConstant.DEFAULT_USER);
 		List<TagCount> tags = managerService.getAllBlogTags(CommonConstant.DEFAULT_USER);
+		
+		List emptyList = new ArrayList();
 		model.addAttribute("user", userInfo);
-		model.addAttribute("cateList", cateList);
-		model.addAttribute("tags", tags);
+		model.addAttribute("cateList", cateList == null ? emptyList : cateList);
+		model.addAttribute("tags", tags == null ? emptyList : tags);
 		if (filter != null) {
 			model.addAttribute("filter", filter);
 		}
+		
+		putNavs(model);
 		return "home";
 	}
 	
 	@RequestMapping("/timeline")
 	public String toTimeline(Model model) {
+		
+		putNavs(model);
 		return "timeline";
 	}
 	
-	@RequestMapping("/about")
-	public String toMarkDownPage(@RequestParam(value = "userId", defaultValue = CommonConstant.DEFAULT_USER) String userId,
+	@RequestMapping("/nav/{path}")
+	public String toMarkDownPage(@PathVariable("path") String pathTitle, @RequestParam(value = "userId", defaultValue = CommonConstant.DEFAULT_USER) String userId,
 	                             Model model) {
-		Blog result = managerService.getByBlogTitle(userId, CommonConstant.ABOUT_TITLE);
+		BlogNav nav = managerService.getBlogNavByAlias(userId, pathTitle);
+		if (nav == null) {
+			return homePage(model, null, null);
+		}
+		Blog result = managerService.getByBlogId(userId, nav.getBlogId());
 		if (result == null) {
 			return homePage(model, null, null);
 		}
-		result.setTitle("关于我");
+		
+		result.setTitle(nav.getNavTitle());
 		model.addAttribute("blog", result);
+		
+		putNavs(model);
 		return "post";
 	}
 	
@@ -111,6 +126,8 @@ public class IndexController {
 			Blog blog = managerService.getByBlogIdMarkDown(userId, blogId);
 			model.addAttribute("blog", blog);
 		}
+		
+		putNavs(model);
 		return "edit_post";
 	}
 	
@@ -122,6 +139,8 @@ public class IndexController {
 		}
 		Page data = managerService.getBlogList(u.getUserId(), page, 10, true, null, null);
 		model.addAttribute("page", data);
+		
+		putNavs(model);
 		return "management";
 	}
 	
@@ -178,7 +197,14 @@ public class IndexController {
 			managerService.blogReadPlus(userId, blogId);
 		}
 		model.addAttribute("blog", result);
+		
+		putNavs(model);
 		return "post";
+	}
+	
+	private void putNavs(Model model) {
+		List<BlogNav> navs = managerService.getAllBlogNav(CommonConstant.DEFAULT_USER);
+		model.addAttribute("navs", navs == null ? new ArrayList() : navs);
 	}
 	
 }

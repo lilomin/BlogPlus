@@ -5,11 +5,13 @@ import org.raymon.xyz.blogplus.common.exception.BlogPlusException;
 import org.raymon.xyz.blogplus.common.exception.ExceptionEnum;
 import org.raymon.xyz.blogplus.common.utils.MarkDownUtils;
 import org.raymon.xyz.blogplus.common.utils.UUIDUtils;
+import org.raymon.xyz.blogplus.dao.BlogNavDao;
 import org.raymon.xyz.blogplus.dao.BlogTagDao;
 import org.raymon.xyz.blogplus.dao.ManagerDao;
 import org.raymon.xyz.blogplus.dao.UserDao;
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.manager.Blog;
+import org.raymon.xyz.blogplus.model.manager.BlogNav;
 import org.raymon.xyz.blogplus.model.manager.BlogTag;
 import org.raymon.xyz.blogplus.model.manager.CalendarCate;
 import org.raymon.xyz.blogplus.model.manager.TagChangeParam;
@@ -46,6 +48,8 @@ public class ManagerServiceImpl implements ManagerService {
 	@Resource
 	private BlogTagDao blogTagDao;
 	@Resource
+	private BlogNavDao blogNavDao;
+	@Resource
 	private UserDao userDao;
 	
 	@Override
@@ -69,9 +73,6 @@ public class ManagerServiceImpl implements ManagerService {
 			Blog db = getByBlogTitle(blog.getUserId(), blog.getTitle());
 			if (db != null) {
 				throw new BlogPlusException(ExceptionEnum.DATA_EXISTS);
-			}
-			if (CommonConstant.ABOUT_TITLE.equals(blog.getTitle())) {
-				blog.setHidden(true);
 			}
 			blog.setContent(Base64Utils.encodeToString(blog.getContent().getBytes()));
 			blog.setCreateTime(new Date());
@@ -307,5 +308,15 @@ public class ManagerServiceImpl implements ManagerService {
 		return results.stream()
 				.sorted()
 				.collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<BlogNav> getAllBlogNav(String userId) {
+		return blogNavDao.list(userId);
+	}
+	
+	@Override
+	public BlogNav getBlogNavByAlias(String userId, String navAlias) {
+		return blogNavDao.selectByNavTitle(userId, navAlias);
 	}
 }

@@ -2,6 +2,7 @@ package org.raymon.xyz.blogplus.service;
 
 import org.raymon.xyz.blogplus.model.Page;
 import org.raymon.xyz.blogplus.model.manager.Blog;
+import org.raymon.xyz.blogplus.model.manager.BlogNav;
 import org.raymon.xyz.blogplus.model.manager.CalendarCate;
 import org.raymon.xyz.blogplus.model.manager.TagChangeParam;
 import org.raymon.xyz.blogplus.model.manager.TagCount;
@@ -98,4 +99,18 @@ public interface ManagerService {
 	 * @return
 	 */
 	List<TagCount> getAllBlogTags(String userId);
+	
+	/**
+	 * 获取当前用户所有导航栏设置
+	 * @param userId
+	 * @return
+	 */
+	List<BlogNav> getAllBlogNav(String userId);
+	
+	/**
+	 * 根据navTitle搜索
+	 * @param navTitle
+	 * @return
+	 */
+	BlogNav getBlogNavByAlias(String userId, String navTitle);
 }
