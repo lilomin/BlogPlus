@@ -303,6 +303,9 @@ blockquote p {
     #home-card .card {
         max-width: 47%;
     }
+    .main-contain .row {
+        margin: 0 15% 0;
+    }
 }
 
 /* timeline */
