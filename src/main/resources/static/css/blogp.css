@@ -303,9 +303,6 @@ blockquote p {
     #home-card .card {
         max-width: 47%;
     }
-    .main-contain .row {
-        margin: 0 15% 0;
-    }
 }
 
 /* timeline */
@@ -313,7 +310,7 @@ blockquote p {
 * {
     margin: 0;
     padding: 0;
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    /*font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";*/
 }
 
 @media (min-width: 1000px) {
