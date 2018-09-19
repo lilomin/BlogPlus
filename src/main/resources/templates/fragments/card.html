@@ -31,12 +31,37 @@
                     <span><h5 class="card-title" style="display: inline;vertical-align: middle;">标签</h5></span>
 
                 </div>
-                <a th:href="@{/?tag={tag}(tag=${tag.tag})}" class="card-link" style="margin: 1px 7px 1px 0;" th:each="tag : ${tags}">
-                    <button type="button" class="btn btn-outline-primary" style="margin-bottom: 0.5rem;">
-                        <span th:text="${tag.tag}"></span>
-                        <sup th:text="${tag.count}"></sup>
-                    </button>
-                </a>
+                <th:blank th:each="tag,stat : ${tags}">
+                    <a th:href="@{/?tag={tag}(tag=${tag.tag})}" class="card-link" style="margin: 1px 7px 1px 0;">
+                        <th:blank th:if="${stat.index % 4 == 0}">
+                            <button type="button" class="btn btn-outline-primary" style="margin-bottom: 0.5rem;">
+                                <span th:text="${tag.tag}"></span>
+                                <sup th:text="${tag.count}"></sup>
+                            </button>
+                        </th:blank>
+
+                        <th:blank th:if="${stat.index % 4 == 1}">
+                            <button type="button" class="btn btn-outline-success" style="margin-bottom: 0.5rem;">
+                                <span th:text="${tag.tag}"></span>
+                                <sup th:text="${tag.count}"></sup>
+                            </button>
+                        </th:blank>
+
+                        <th:blank th:if="${stat.index % 4 == 2}">
+                            <button type="button" class="btn btn-outline-danger" style="margin-bottom: 0.5rem;">
+                                <span th:text="${tag.tag}"></span>
+                                <sup th:text="${tag.count}"></sup>
+                            </button>
+                        </th:blank>
+
+                        <th:blank th:if="${stat.index % 4 == 3}">
+                            <button type="button" class="btn btn-outline-warning" style="margin-bottom: 0.5rem;">
+                                <span th:text="${tag.tag}"></span>
+                                <sup th:text="${tag.count}"></sup>
+                            </button>
+                        </th:blank>
+                    </a>
+                </th:blank>
             </div>
         </div>
     </div>

@@ -201,6 +201,10 @@ aside .side-card {
     width: 25%;
 }
 
+.card-deck {
+    margin: 0 !important;
+}
+
 .card-tag {
     vertical-align: middle;
     padding-bottom: 8px;
@@ -302,6 +306,21 @@ blockquote p {
     }
     #home-card .card {
         max-width: 47%;
+    }
+}
+
+/* very very large */
+@media (min-width:2100px) {
+    .post-content {
+        padding: 2% 12%;
+        margin-top: 5%;
+    }
+    .card .card-img-top {
+        height: 270px;
+    }
+    .container-fluid {
+        padding-left: 10% !important;
+        padding-right: 10% !important;;
     }
 }
 
