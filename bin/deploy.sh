@@ -30,7 +30,7 @@ do
 done
 
 #执行maven进行编译
-log 'maven is building'
+log 'maven is building!'
 mavenLog=`mvn clean package -Dmaven.test.skip=true -Pprod  2>&1`
 if [ $? -ne 0  ];
 then
@@ -42,14 +42,14 @@ do
         log $line
 done
 
-log 'kill old process'
+log 'kill old process!'
 pid=` ps aux | grep BlogPlus | awk -F ' ' '{print $2}'`
 if [ -n "${pid}" ]; then
         kill -9 $pid
 fi
 log "killed process is "${pid}
 
-log 'starting thr process'
+log 'starting thr process!'
 cd $targetPath
 mv -f $appName.jar $homePath
 cd $homePath
