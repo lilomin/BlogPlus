@@ -16,7 +16,7 @@ function log() {
 }
 
 #执行git拉取源码
-log 'pull code from github!'
+log 'pull code from github! '
 cd $deployPath
 gitLog=`git pull origin master 2>&1`
 if [ $? -ne 0  ];
