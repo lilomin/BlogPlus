@@ -51,10 +51,11 @@ app.loadHomeCard = function (data) {
         var card = '<div class="card"><img class="card-img-top" src="/api/v1/file/' + blog.image + '" alt="Card image cap">' +
                 '<div class="card-body"><a href="/post/' + blog.path + '"><h5 class="card-title">' + blog.title + '</h5></a>' +
                 '<div class="card-tag">' + tags + '</div>' +
-                '<p class="card-text card-desc">' + blog.description + '</p>' + 
-                '<p class="card-text">' + 
-                '<small class="text-muted">' + blog.createDay + '</small><a href="/post/' + blog.path + '" ' +
-                'style="float:right;">详情<span></span></a></p></div></div>';
+                '<p class="card-text card-desc">' + blog.description +
+                '<a href="/post/' + blog.path + '"' + '>»</a>' + '</p>' +
+                '<p class="card-text">' +
+                '<small style="color: #9EABB3;text-decoration: none;">' + blog.createDay + '</small>' +
+                '</p></div></div>';
 
         if (currentLine * app.homeCardEachLine >= index) {
             cardDeck += card;
