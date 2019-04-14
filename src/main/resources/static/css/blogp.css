@@ -103,6 +103,11 @@ pre code {
     border-radius: 5px;
 }
 
+.blog-tag-font {
+    font-family: "Fanwood Text",serif;
+    font-style: italic;
+}
+
 .post-content ul, 
 .post-content ol {
     margin-left: 2rem;
