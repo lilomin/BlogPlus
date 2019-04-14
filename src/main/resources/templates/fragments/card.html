@@ -34,7 +34,7 @@
                 <th:blank th:each="tag,stat : ${tags}">
                     <a th:href="@{/?tag={tag}(tag=${tag.tag})}" class="card-link" style="margin: 1px 7px 1px 0;">
                         <th:blank th:if="${stat.index % 4 == 0}">
-`                            <button type="button" class="blog-tag-font btn btn-outline-primary" style="margin-bottom: 0.5rem;">
+                            <button type="button" class="blog-tag-font btn btn-outline-primary" style="margin-bottom: 0.5rem;">
                                 <span th:text="${tag.tag}"></span>
                                 <sup th:text="${tag.count}"></sup>
                             </button>
