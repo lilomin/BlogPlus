@@ -45,6 +45,8 @@ import java.util.concurrent.TimeUnit;
 @Controller
 @RequestMapping("/")
 public class IndexController {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 	
 	@Resource
 	private ManagerService managerService;
@@ -152,7 +154,7 @@ public class IndexController {
 			try {
 				ips = readerCache.get(blogId);
 			} catch (ExecutionException e) {
-				e.printStackTrace();
+			    LOGGER.warn("readerCache.get error:", e);
 			}
 			if (ips == null || ips.contains(ip)) {
 				return false;
@@ -162,8 +164,8 @@ public class IndexController {
 			return true;
 		} else {
 			readerCache = CacheBuilder.newBuilder()
-					.expireAfterWrite(5, TimeUnit.MINUTES)
-					.initialCapacity(16).maximumSize(5000)
+					.expireAfterWrite(8, TimeUnit.HOURS)
+					.initialCapacity(50).maximumSize(5000)
 					.build(new CacheLoader<String, Set<String>>() {
 						@Override
 						public Set<String> load(String s) throws Exception {
