@@ -26,6 +26,8 @@
                                 <small class="text-muted" th:text="${tag}"></small>
                             </th:block>
                         </th:block>
+                        <embed src="/images/svg/eye.svg" width="20" height="20" type="image/svg+xml"></embed>
+                        <small class="text-muted" th:text="${blog.readTimes}"></small>
                     </div>
                 </div>
                 <th:block th:utext="${blog.content}"></th:block>
