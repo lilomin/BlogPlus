@@ -156,6 +156,7 @@ public class IndexController {
 			} catch (ExecutionException e) {
 			    LOGGER.warn("readerCache.get error:", e);
 			}
+			LOGGER.info("readerCache ip:{} cache:{}", ip, readerCache.asMap());
 			if (ips == null || ips.contains(ip)) {
 				return false;
 			}
