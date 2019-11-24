@@ -351,7 +351,7 @@ app.loadTimeline = function (data) {
 
     if (data.currentPage >= app.totalPage) {
         if ($('.timeline .timeline-end').length <= 0) {
-            $('.timeline').append('<h4 class="timeline-end">到底咯</h4>');
+            $('.timeline').append('<h3 class="timeline-end">到底咯</h3>');
         }
     }
 };
