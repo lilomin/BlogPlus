@@ -162,7 +162,6 @@ public class IndexController {
 			}
 			ips.add(ip);
 			readerCache.put(blogId, ips);
-			return true;
 		} else {
 			readerCache = CacheBuilder.newBuilder()
 					.expireAfterWrite(8, TimeUnit.HOURS)
@@ -170,9 +169,7 @@ public class IndexController {
 					.build(new CacheLoader<String, Set<String>>() {
 						@Override
 						public Set<String> load(String s) throws Exception {
-							Set<String> ips = new HashSet<>();
-							ips.add(ip);
-							return ips;
+							return new HashSet<>();
 						}
 					});
 		}
